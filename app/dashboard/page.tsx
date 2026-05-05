@@ -1,28 +1,36 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { Suspense } from 'react'
-
-export async function DashboardContent() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    redirect('/')
-  }
-  const username = user.identities?.[0]?.identity_data?.name
-
+import SuspenseCard from '@/components/ui/SuspenseCard'
+import NextRaceWeeked from '@/components/ui/dashboard/NextRaceWeeked'
+import DriverRankingOverview from '@/components/ui/dashboard/DriverRankingOverview'
+import RaceRatingOverview from '@/components/ui/dashboard/RaceRatingOverview'
+import UsersDriverOpinions from '@/components/ui/dashboard/UsersDriverOpinions'
+export default async function Dashboard() {
 
   return (
-    <div>
-      user: {username}
+    <div className="flex flex-row justify-between gap-10">
+
+      <div className='leftSide w-[60%] flex flex-col gap-2 max-h-screen'>
+        <SuspenseCard height={300}>
+          <NextRaceWeeked />
+        </SuspenseCard>
+        <div className='flex flex-row gap-4'>
+          <SuspenseCard height={210}>
+            <DriverRankingOverview />
+          </SuspenseCard>
+          <SuspenseCard height={210}>
+            <RaceRatingOverview />
+          </SuspenseCard>
+        </div>
+
+        <SuspenseCard height={275}>
+          <UsersDriverOpinions />
+        </SuspenseCard>
+      </div>
+      <div className='rightSide w-[40%] flex flex-col gap-4'>
+        <SuspenseCard>
+          <h1>This is some test content on the right side</h1>
+        </SuspenseCard>
+      </div>
     </div>
   )
 }
 
-
-export default function Dashboard() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DashboardContent />
-    </Suspense>
-  )
-}
