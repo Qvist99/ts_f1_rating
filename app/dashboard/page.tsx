@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
-export async function ProtectedContent() {
+export async function DashboardContent() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
@@ -19,10 +19,10 @@ export async function ProtectedContent() {
 }
 
 
-export default function Protected() {
+export default function Dashboard() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ProtectedContent />
+      <DashboardContent />
     </Suspense>
   )
 }

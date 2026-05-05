@@ -20,7 +20,8 @@ create table races (
     "race_name" text not null,
     "race_location" text not null,
     "race_official_name" text not null,
-    "sessions" jsonb not null
+    "sessions" jsonb not null,
+    "meeting_key" integer not null
 );
 
 create table driver_ratings (
