@@ -9,7 +9,7 @@ export default async function Dashboard() {
     <div className="flex flex-row justify-between gap-10">
 
       <div className='leftSide w-[60%] flex flex-col gap-2 max-h-screen'>
-        <SuspenseCard height={300}>
+        <SuspenseCard height={320}>
           <NextRaceWeeked />
         </SuspenseCard>
         <div className='flex flex-row gap-4'>

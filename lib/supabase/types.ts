@@ -173,6 +173,7 @@ export type Database = {
           circuit_name: string
           country_flag_url: string
           country_name: string
+          date_end: string
           date_start: string
           id: string
           is_cancelled: boolean
@@ -187,6 +188,7 @@ export type Database = {
           circuit_name: string
           country_flag_url: string
           country_name: string
+          date_end: string
           date_start: string
           id?: string
           is_cancelled?: boolean
@@ -201,6 +203,7 @@ export type Database = {
           circuit_name?: string
           country_flag_url?: string
           country_name?: string
+          date_end?: string
           date_start?: string
           id?: string
           is_cancelled?: boolean
