@@ -75,17 +75,18 @@ using (true);
 create policy "Users can insert their own driver ratings"
 on driver_ratings for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own driver ratings"
 on driver_ratings for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own driver ratings"
 on driver_ratings for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
 
 -- race_ratings: read all ratings if logged in, write only your own
 create policy "Authenticated users can read race ratings"
@@ -96,17 +97,18 @@ using (true);
 create policy "Users can insert their own race ratings"
 on race_ratings for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own race ratings"
 on race_ratings for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own race ratings"
 on race_ratings for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
 
 -- driver_comments: read all comments if logged in, write only your own
 create policy "Authenticated users can read driver comments"
@@ -117,14 +119,15 @@ using (true);
 create policy "Users can insert their own driver comments"
 on driver_comments for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own driver comments"
 on driver_comments for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own driver comments"
 on driver_comments for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
