@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server"
 import Image from "next/image";
 import NextSession from "../NextSession";
 import WeatherAtTrack from "../WeatherAtTrack";
-
+import { StepForward } from "lucide-react";
+import Link from "next/link";
 
 export default async function NextRaceWeekend() {
     const supabase = await createClient();
@@ -27,6 +28,8 @@ export default async function NextRaceWeekend() {
         console.error("Error fetching race data:", raceDataError);
         return null;
     }
+
+    const isRaceWeekStarted = new Date(raceData.date_start) <= new Date();
 
     return (
         <div className="relative">
@@ -59,7 +62,23 @@ export default async function NextRaceWeekend() {
                 </div>
 
                 <div className="flex flex-col justify-end">
-                    <button>Rate Drivers</button>
+                    {isRaceWeekStarted ? (
+
+                        <Link
+                            href={`/driverRating/${raceData.id}`}
+                            className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors"
+
+                        >
+                            Rate Drivers
+                            <StepForward size={16} />
+                        </Link>
+                    ) : (
+                        <span title="Will be made available when FP1 starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
+                            Rate Drivers
+                            <StepForward size={16} />
+                        </span>
+                    )
+                    }
                 </div>
             </div>
 
