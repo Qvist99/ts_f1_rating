@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image";
 import NextSession from "../NextSession";
+import WeatherAtTrack from "../WeatherAtTrack";
 
 
-export default async function NextRaceWeeked() {
+export default async function NextRaceWeekend() {
     const supabase = await createClient();
 
     const twoDaysAgo = new Date();
@@ -27,22 +28,8 @@ export default async function NextRaceWeeked() {
         return null;
     }
 
-    console.log("raceData", raceData)
-
-
-    // Fetch the weather data from the https://api.openf1.org/v1/weather?meeting_key=1284&session_key=latest endpoint. Gives us an array of the weather data where we want to only use the last element in the array
-
-    // Need to have an placeholder for when the weather data is not yet available, Something like "tbc in place of the weather data and an svg of a sun with a question mark or something like that"
-
-    // Display session times, country flag, circuit image, circuit name, country name, race name, maybe race location, 
-
-    // Have a countdown timer that counts down to race start as this will give the user a link where it can go and rate the race and the drivers for this round
-
-    // Only switch too the next race 2 days after the current race is finished too give users some time to finish their ratings
-
-
     return (
-        <div>
+        <div className="relative">
             <div className="flex justify-between">
                 <div className="flex gap-4 items-center justify-center">
                     {/* Find svgs for the countries and map them instead as the images from the api are suboptimal */}
@@ -64,9 +51,16 @@ export default async function NextRaceWeeked() {
 
             </div>
 
-            <div className="">
+            <div className="flex justify-between items-stretch">
                 {/* Next session component - track weather box and Rate drivers button */}
-                <NextSession sessions={raceData.sessions} />
+                <div className="flex gap-4">
+                    <NextSession sessions={raceData.sessions} />
+                    <WeatherAtTrack sessions={raceData.sessions} meetingKey={raceData.meeting_key} />
+                </div>
+
+                <div className="flex flex-col justify-end">
+                    <button>Rate Drivers</button>
+                </div>
             </div>
 
         </div>

@@ -1,5 +1,5 @@
 import SuspenseCard from '@/components/ui/SuspenseCard'
-import NextRaceWeeked from '@/components/ui/dashboard/NextRaceWeeked'
+import NextRaceWeekend from '@/components/ui/dashboard/NextRaceWeekend'
 import DriverRankingOverview from '@/components/ui/dashboard/DriverRankingOverview'
 import RaceRatingOverview from '@/components/ui/dashboard/RaceRatingOverview'
 import UsersDriverOpinions from '@/components/ui/dashboard/UsersDriverOpinions'
@@ -8,9 +8,9 @@ export default async function Dashboard() {
   return (
     <div className="flex flex-row justify-between gap-10">
 
-      <div className='leftSide w-[60%] flex flex-col gap-2 max-h-screen'>
+      <div className='leftSide w-[60%] flex flex-col gap-2 max-h-screen relative'>
         <SuspenseCard height={320}>
-          <NextRaceWeeked />
+          <NextRaceWeekend />
         </SuspenseCard>
         <div className='flex flex-row gap-4'>
           <SuspenseCard height={210}>

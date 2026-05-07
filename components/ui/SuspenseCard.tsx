@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 
-const cardClass = `border-2 border-border p-4 rounded-md w-full h-full`
+const cardClass = `border-2 border-border py-2 px-4 rounded-md w-full h-full`
 
 export default function SuspenseCard({ children, height }: { children: React.ReactNode, height?: number }) {
     return (
