@@ -23,10 +23,10 @@ export default async function RaceRatingOverview() {
 
     const totalRacesRated = averageRatings.length;
 
-    const sliceCount = totalRacesRated < 10 ? Math.ceil(totalRacesRated / 2) : 5;
+    const sliceCount = Math.floor(totalRacesRated / 2);
 
-    const top5 = sortedRatings.slice(0, sliceCount);
-    const worst5 = sortedRatings.slice(-sliceCount);
+    const top5 = sortedRatings.slice(0, Math.ceil(totalRacesRated / 2));
+    const worst5 = sortedRatings.slice(-sliceCount).reverse();
 
     return (
         <div className="h-full">
@@ -70,7 +70,7 @@ function SliderPage({ averageRatings, headerText, totalRaces, type }: { averageR
                             <span>{rating.race_name}</span>
                         </div>
                         <div>
-                            <span>{rating.average}</span>
+                            <span>{rating.average.toFixed(1)}</span>
                         </div>
                     </div>
                 ))}
@@ -97,7 +97,7 @@ function AllRacesDialog({ averageRatings }: { averageRatings: AverageRaceRating[
                                 <span className="font-bold">{rating.race_name}</span>
                             </div>
                             <div>
-                                <span>{rating.average}</span>
+                                <span>{rating.average.toFixed(1)}</span>
                             </div>
                         </div>
                     ))}
