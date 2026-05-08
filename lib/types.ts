@@ -50,3 +50,20 @@ export type AverageRaceRating = {
     race_name: string;
     average: number;
 }
+
+export type DriverRatingFromApi = {
+    driver_id: string;
+    id: string;
+    race_id: string;
+    rating: number;
+    user_id: string;
+    drivers: {
+        first_name: string;
+        last_name: string;
+    };
+}
+
+export type AverageDriverRating = {
+    driver_name: string;
+    average: number;
+}
