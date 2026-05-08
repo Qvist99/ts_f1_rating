@@ -1,3 +1,19 @@
+export type Races = {
+        circuit_image_url: string;
+        circuit_name: string;
+        country_flag_url: string;
+        country_name: string;
+        date_end: string;
+        date_start: string;
+        id: string;
+        is_cancelled: boolean;
+        meeting_key: number;
+        race_location: string;
+        race_name: string;
+        race_official_name: string;
+        sessions: RaceSession[]
+}
+
 export type RaceSession = {
     date_end: string;
     date_start: string;
@@ -19,4 +35,18 @@ export type WeatherDataFromApi = {
     air_temperature: number; // Air temperature (°C)
     meeting_key: number;
     pressure: number; // Air pressure (mbar).   
+}
+
+
+export type UserRaceRatingFromApi = {
+    id: string;
+    race_id: string;
+    rating: number;
+    user_id: string;
+    races: Pick<Races, "race_name">
+}
+
+export type AverageRaceRating = {
+    race_name: string;
+    average: number;
 }
