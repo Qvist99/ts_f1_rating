@@ -25,11 +25,11 @@ export default function NextSession({ sessions }: { sessions: RaceSession[] }) {
                     ) : isLive ? (
                         <>
                             <p className="text-text-muted font-bold text-xs">NOW LIVE</p>
-                            <p className="text-[#ED6464] text-lg font-bold leading-none">{nextSession.session_name}</p>
+                            <p className="text-[#ED6464] text-lg font-bold leading-none">{nextSession.session_name.toUpperCase()}</p>
                         </>
                     ) : (
                         <>
-                            <p className="text-text-muted font-bold text-xs">NEXT UP - {nextSession.session_name}</p>
+                            <p className="text-text-muted font-bold text-xs">NEXT UP - {nextSession.session_name.toUpperCase()}</p>
                             <p className="text-[#ED6464] text-lg font-bold leading-none">{sessionDateAndTime}</p>
                         </>
                     )}
@@ -95,19 +95,19 @@ function SessionTimes({ sessions, currentTime, nextSessionId }: { sessions: Race
                     const isFinished = new Date(session.date_end) < currentTime;
 
                     return (
-                        <div key={session.session_key} className="flex justify-between items-center px-2 py-1 rounded bg-card-bg border border-card-border" style={isFinished ? { opacity: 0.5 } : isLive || isNextSession ? { backgroundColor: "#26151A", borderColor: "#5C1E20" } : {}}>
+                        <div key={session.session_key} className="flex justify-between items-center px-2 py-1 rounded bg-card-bg border border-card-border font-condensed" style={isFinished ? { opacity: 0.5 } : isLive || isNextSession ? { backgroundColor: "#26151A", borderColor: "#5C1E20" } : {}}>
                             <div className="flex gap-2 items-center">
                                 <div className="h-2 w-2 rounded" style={{ backgroundColor: dotColor(session) }}></div>
-                                <p className="font-bold">{session.session_name}</p>
+                                <p className="font-bold">{session.session_name.toUpperCase()}</p>
                             </div>
 
                             <div className="">
                                 {isLive ? (
-                                    <p className="text-xs text-[#FF6B6B] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">LIVE</p>
+                                    <p className="text-sm text-[#FF6B6B] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">LIVE</p>
                                 ) : isNextSession ? (
-                                    <p className="text-xs text-[#ED6464] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">NEXT</p>
+                                    <p className="text-sm text-[#ED6464] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">NEXT</p>
                                 ) : (
-                                    <p className="text-sm text-text-muted font-bold tabular-nums">{sessionDate}: {sessionStartTime} - {sessionEndTime}</p>
+                                    <p className="font-sans text-sm text-text-muted font font-bold tabular-nums">{sessionDate}: {sessionStartTime} - {sessionEndTime}</p>
                                 )
                                 }
                             </div>

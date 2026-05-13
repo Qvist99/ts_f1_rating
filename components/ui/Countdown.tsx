@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 
 function CountdownBox({ value, label }: { value: number; label: string }) {
     return (
-        <div className="w-[30px] h-full  flex flex-col items-center justify-center">
-            <span className="text-xl font-bold ">{value}</span>
-            <span className="text-xs text-text-muted font-bold">{label}</span>
+        <div className="w-[30px] h-full  flex flex-col items-center justify-center font-condensed">
+            <span className="text-2xl font-bold ">{value}</span>
+            <span className="text-sm text-text-muted font-bold">{label}</span>
         </div>
     );
 }

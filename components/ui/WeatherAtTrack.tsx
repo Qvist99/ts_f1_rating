@@ -62,7 +62,7 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
                 </div>
                 <div className="flex gap-2 items-center bg-[#111B27] border border-[#1B324E] p-2 rounded">
                     <div className="h-2 w-2 bg-[#4A9EFF] rounded"></div>
-                    <p className="text-[#3267A5]">{weatherData.rainfall === 0 ? "Dry" : "Wet"} - {weatherData.pressure} mbar</p>
+                    <p className="text-[#3267A5] font-condensed font-bold">{weatherData.rainfall === 0 ? "Dry" : "Wet"} - {weatherData.pressure} mbar</p>
                 </div>
             </div>
         </div>
@@ -71,9 +71,9 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
 
 function WeatherCard({ label, suffix, value }: { label: string; suffix: string; value: string | number }) {
     return (
-        <div className="flex flex-col justify-center items-center bg-card-bg border border-card-border rounded w-full">
+        <div className="flex flex-col justify-center items-center bg-card-bg border border-card-border rounded w-full font-condensed">
             <p className="text-lg font-bold text-text-primary">{value}{suffix}</p>
-            <p className="text-xs font-bold text-text-muted">{label}</p>
+            <p className="text-sm font-bold text-text-muted">{label}</p>
         </div>
     )
 

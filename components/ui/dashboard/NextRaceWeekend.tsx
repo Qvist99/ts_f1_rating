@@ -45,7 +45,7 @@ export default async function NextRaceWeekend() {
                     </div>
 
                     <div>
-                        <h2 className="text-xl text-text-primary font-bold leading-none mb-0">{raceData.race_name}</h2>
+                        <h2 className="text-xl text-text-primary font-bold leading-none mb-0 font-condensed">{raceData.race_name}</h2>
                         <p className="text-sm text-text-muted font-bold">{raceData.circuit_name} - Round {raceData.round}</p>
                     </div>
 
@@ -68,20 +68,20 @@ export default async function NextRaceWeekend() {
             </div>
 
             <div className="flex justify-between items-center mt-4 h-full w-full">
-                <p className="text-text-muted">{dateDisplay}</p>
+                <p className="text-text-muted font-bold">{dateDisplay}</p>
 
                 {isRaceWeekStarted ? (
 
                     <Link
                         href={`/driverRating/${raceData.id}`}
-                        className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors"
+                        className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors font-condensed font-bold"
 
                     >
                         <Star size={16} />
                         Rate Drivers
                     </Link>
                 ) : (
-                    <span title="Will be made available when FP1 starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
+                    <span title="Will be made available when FP1 starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md cursor-not-allowed font-condensed font-bold">
                         <Star size={16} />
                         Rate Drivers
                     </span>
