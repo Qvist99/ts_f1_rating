@@ -11,7 +11,8 @@ export type Races = {
         race_location: string;
         race_name: string;
         race_official_name: string;
-        sessions: RaceSession[]
+        sessions: RaceSession[];
+        round: number;
 }
 
 export type RaceSession = {

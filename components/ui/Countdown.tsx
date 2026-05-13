@@ -2,31 +2,43 @@
 
 import { useCountdown } from "@/lib/races/useCountdown"
 import { RaceSession } from "@/lib/types";
+import { useEffect, useState } from "react";
 
 function CountdownBox({ value, label }: { value: number; label: string }) {
     return (
-        <div className="flex flex-col items-center -skew-x-6">
-            <div className="bg-gray-700 min-w-[76px] h-full p-2 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold skew-x-6">{value}</span>
-                <span className="text-xs text-text-muted mt-1 skew-x-6">{label}</span>
-            </div>
+        <div className="w-[30px] h-full  flex flex-col items-center justify-center">
+            <span className="text-xl font-bold ">{value}</span>
+            <span className="text-xs text-text-muted font-bold">{label}</span>
         </div>
     );
 }
 
 export function Countdown({ session }: { session: RaceSession | undefined }) {
     const { days, hours, minutes, seconds } = useCountdown(session?.date_start);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
+    if (!mounted) return (
+        <div className="flex gap-2">
+            {["D", "H", "M", "S"].map(label => (
+                <CountdownBox key={label} value={0} label={label} />
+            ))}
+        </div>
+    );
+
 
     return (
 
-        <div className="w-fit">
-            <div>
-                <div className="flex gap-2 ">
-                    <CountdownBox value={days} label="Days" />
-                    <CountdownBox value={hours} label="Hours" />
-                    <CountdownBox value={minutes} label="Minutes" />
-                    <CountdownBox value={seconds} label="Seconds" />
-                </div>
+        <div className="w-fit flex">
+            <div className="flex gap-2 items-center ">
+                <CountdownBox value={days} label="D" />
+                <CountdownBox value={hours} label="H" />
+                <CountdownBox value={minutes} label="M" />
+                <CountdownBox value={seconds} label="S" />
             </div>
         </div>
     );

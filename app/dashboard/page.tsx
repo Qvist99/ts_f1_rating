@@ -9,19 +9,11 @@ export default async function Dashboard() {
     <div className="flex flex-row justify-between gap-10">
 
       <div className='leftSide w-[60%] flex flex-col gap-2 max-h-screen relative'>
-        <SuspenseCard height={320}>
+        <SuspenseCard height={400}>
           <NextRaceWeekend />
         </SuspenseCard>
-        <div className='flex flex-row gap-4'>
-          <SuspenseCard height={210}>
-            <DriverRankingOverview />
-          </SuspenseCard>
-          <SuspenseCard height={210}>
-            <RaceRatingOverview />
-          </SuspenseCard>
-        </div>
 
-        <SuspenseCard height={275}>
+        <SuspenseCard height={320}>
           <UsersDriverOpinions />
         </SuspenseCard>
       </div>

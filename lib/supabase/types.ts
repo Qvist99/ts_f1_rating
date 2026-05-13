@@ -181,6 +181,7 @@ export type Database = {
           race_location: string
           race_name: string
           race_official_name: string
+          round: number
           sessions: Json
         }
         Insert: {
@@ -196,6 +197,7 @@ export type Database = {
           race_location: string
           race_name: string
           race_official_name: string
+          round: number
           sessions: Json
         }
         Update: {
@@ -211,6 +213,7 @@ export type Database = {
           race_location?: string
           race_name?: string
           race_official_name?: string
+          round?: number
           sessions?: Json
         }
         Relationships: []

@@ -10,7 +10,7 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
     const nextSession = getNextSession(sessions)
 
     let sessionKey: string | number = "latest"
-    const sharedCss = "flex flex-col border border-border p-4 w-[350px]"
+    const sharedCss = "flex flex-col w-full pl-3.5 pr-0"
     if (nextSession) {
         sessionKey = nextSession.session_key
     }
@@ -31,7 +31,7 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
 
         return (
             <div className={`${sharedCss} justify-center items-center text-center`}>
-                <CloudOff size={32} className="mx-auto mb-2" />
+                <CloudOff size={32} className=" mb-2" />
                 <p className="text-sm text-text-muted">Weather data will be available closer to the session start time.</p>
             </div>
         )
@@ -40,25 +40,47 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
     const weatherDataArray: WeatherDataFromApi[] = await res.json()
     const weatherData = weatherDataArray[weatherDataArray.length - 1] // Get the latest weather data
 
-    // remove date, session_key and meeting_key from the weather data as this does not need too be displayed
-    const { date, session_key, meeting_key, ...displayWeatherData } = weatherData
+
+    const reformatedWeatherData = [
+        { label: "TRACK", value: `${weatherData.track_temperature}`, suffix: "°" },
+        { label: "AIR", value: `${weatherData.air_temperature}`, suffix: "°" },
+        { label: "HUMIDITY", value: `${weatherData.humidity}`, suffix: "%" },
+        { label: `${getWindDirection(weatherData.wind_direction)} M/S`, value: `${weatherData.wind_speed}`, suffix: "" },
+    ]
+
 
 
     return (
-        <div className={`${sharedCss} flex flex-col gap-[2px]`}>
-            {Object.entries(displayWeatherData).map(([key, value], index) => {
-                const { label, suffix, icon: Icon } = weatherConfig[key]
-
-                return (
-                    <div key={key} className={`flex justify-between px-2 ${index % 2 === 0 ? "bg-[#2d3748]" : ""} `}>
-                        <span className="flex items-center gap-2">
-                            <Icon size={16} />
-                            {label}
-                        </span>
-                        <span>{value}{suffix}</span>
-                    </div>
-                )
-            })}
+        <div className={`${sharedCss} gap-[2px]`}>
+            <h2 className="text-text-muted font-bold">Conditions</h2>
+            <div className="flex flex-col gap-2 h-full">
+                <div className="grid grid-cols-2 gap-1 h-full">
+                    {reformatedWeatherData.map(({ label, value, suffix }, index) => (
+                        <WeatherCard key={index} label={label} suffix={suffix} value={value} />
+                    )
+                    )}
+                </div>
+                <div className="flex gap-2 items-center bg-[#111B27] border border-[#1B324E] p-2 rounded">
+                    <div className="h-2 w-2 bg-[#4A9EFF] rounded"></div>
+                    <p className="text-[#3267A5]">{weatherData.rainfall === 0 ? "Dry" : "Wet"} - {weatherData.pressure} mbar</p>
+                </div>
+            </div>
         </div>
     )
+}
+
+function WeatherCard({ label, suffix, value }: { label: string; suffix: string; value: string | number }) {
+    return (
+        <div className="flex flex-col justify-center items-center bg-card-bg border border-card-border rounded w-full">
+            <p className="text-lg font-bold text-text-primary">{value}{suffix}</p>
+            <p className="text-xs font-bold text-text-muted">{label}</p>
+        </div>
+    )
+
+}
+
+function getWindDirection(degree: number) {
+    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    const index = Math.round(degree / 45) % 8;
+    return directions[index];
 }

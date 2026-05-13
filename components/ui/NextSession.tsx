@@ -10,41 +10,52 @@ export default function NextSession({ sessions }: { sessions: RaceSession[] }) {
     const nextSession = getNextSession(sessions);
     const isLive = nextSession ? new Date(nextSession.date_start) < now : false;
     const isWeekendOver = !nextSession;
+    const nextSessionId = nextSession ? nextSession.session_key : null;
 
-    const headerLabel = isWeekendOver
-        ? "Weekend finished"
-        : isLive
-            ? "Live 🔴"
-            : "Next session";
+
+    const sessionDateAndTime = nextSession ? `${new Date(nextSession.date_start).toLocaleDateString("en-US", { month: "short", day: "numeric" })} - ${new Date(nextSession.date_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "";
+
 
     return (
-        <div className="w-fit">
-            <div className="flex justify-between font-bold">
-                <h3>{headerLabel}</h3>
-                {nextSession && <h3 className="text-text-muted">{nextSession.session_name}</h3>}
+        <div className="w-full border-r border-card-border -mx-4 px-4 -my-2 py-2">
+            <div className="flex justify-between bg-[#26151A] -mx-4 px-4 -my-2 border-b-2 border-[#411B1C] py-2">
+                <div className="flex flex-col justify-center">
+                    {isWeekendOver ? (
+                        <p className="text-text-muted font-bold text-xs">WEEKEND FINISHED</p>
+                    ) : isLive ? (
+                        <>
+                            <p className="text-text-muted font-bold text-xs">NOW LIVE</p>
+                            <p className="text-[#ED6464] text-lg font-bold leading-none">{nextSession.session_name}</p>
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-text-muted font-bold text-xs">NEXT UP - {nextSession.session_name}</p>
+                            <p className="text-[#ED6464] text-lg font-bold leading-none">{sessionDateAndTime}</p>
+                        </>
+                    )}
+                </div>
+
+                {!isWeekendOver && (
+                    isLive ? (
+                        <span className="self-center text-xs font-bold px-2 py-0.5 rounded bg-[#511D1F] border border-[#8E2826] text-[#ED6464]">
+                            LIVE
+                        </span>
+                    ) : (
+                        <Countdown session={nextSession} />
+                    )
+                )}
             </div>
-            <div className="bg-[#111220] px-3 py-2 rounded-md">
-                <Countdown session={nextSession} />
-                <SessionTimes sessions={sessions} />
+
+            <div className="">
+                <SessionTimes sessions={sessions} currentTime={now} nextSessionId={nextSessionId} />
             </div>
         </div>
+
     );
 }
 
 
-function SessionTimes({ sessions }: { sessions: RaceSession[] }) {
-    // Split times up into respective dates and display them as fp1: 10:00-12:00 as a tag in that row. That way we can display the sessions for each day easier. Maybe colorcode in future too show what sessions already finished. And have some sort of an highlight for the next session as well.
-
-    const sessionAbbrv = {
-        "Practice 1": "FP1",
-        "Practice 2": "FP2",
-        "Practice 3": "FP3",
-        "Qualifying": "Q",
-        "Sprint": "SR",
-        "Sprint Qualifying": "SQ",
-        "Race": "R"
-    }
-
+function SessionTimes({ sessions, currentTime, nextSessionId }: { sessions: RaceSession[], currentTime: Date, nextSessionId: string | null }) {
     const formatSessionDate = (date: string) => {
         return new Date(date).toLocaleDateString("en-US", {
             month: "short",
@@ -52,38 +63,58 @@ function SessionTimes({ sessions }: { sessions: RaceSession[] }) {
         });
     };
 
+    const formatSessionTime = (date: string) => {
+        return new Date(date).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
 
-
-    const sessionsByDate: { [date: string]: RaceSession[] } = {};
-
-    sessions.forEach((session) => {
-        const date = formatSessionDate(session.date_start);
-        if (!sessionsByDate[date]) {
-            sessionsByDate[date] = [];
+    const dotColor = (session: RaceSession) => {
+        if (session.session_type === "Practice") {
+            return "#4A9EFF"
+        } else if (session.session_type === "Qualifying") {
+            return "#FFD60A"
+        } else if (session.session_type === "Race") {
+            return "#FF3B30"
         }
-        sessionsByDate[date].push(session);
-    });
+    }
+
 
 
     return (
-        <div className="mt-2 flex flex-col gap-2">
-            {Object.entries(sessionsByDate).map(([date, sessions]) => (
-                <div key={date} className="flex gap-4 items-center">
-                    <h4 className="text-sm text-text-muted font-bold">{date}</h4>
-                    <div className="flex gap-2">
-                        {sessions.map((session) => {
-                            const startTime = new Date(session.date_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            const endTime = new Date(session.date_end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            return (
-                                <div key={session.session_name} className="px-2 py-1 bg-gray-700 rounded text-sm">
-                                    {sessionAbbrv[session.session_name]}: {startTime} - {endTime}
-                                </div>
-                            )
-                        }
-                        )}
-                    </div>
-                </div>
-            ))}
+        <div className="mt-4 flex flex-col gap-1">
+            {
+                sessions.map(session => {
+                    const sessionDate = formatSessionDate(session.date_start);
+                    const sessionStartTime = formatSessionTime(session.date_start);
+                    const sessionEndTime = formatSessionTime(session.date_end);
+
+                    const isNextSession = session.session_key === nextSessionId;
+                    const isLive = new Date(session.date_start) < currentTime && new Date(session.date_end) > currentTime;
+                    const isFinished = new Date(session.date_end) < currentTime;
+
+                    return (
+                        <div key={session.session_key} className="flex justify-between items-center px-2 py-1 rounded bg-card-bg border border-card-border" style={isFinished ? { opacity: 0.5 } : isLive || isNextSession ? { backgroundColor: "#26151A", borderColor: "#5C1E20" } : {}}>
+                            <div className="flex gap-2 items-center">
+                                <div className="h-2 w-2 rounded" style={{ backgroundColor: dotColor(session) }}></div>
+                                <p className="font-bold">{session.session_name}</p>
+                            </div>
+
+                            <div className="">
+                                {isLive ? (
+                                    <p className="text-xs text-[#FF6B6B] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">LIVE</p>
+                                ) : isNextSession ? (
+                                    <p className="text-xs text-[#ED6464] py-0.5 font-bold bg-[#511D1F] border border-[#8E2826] rounded px-2">NEXT</p>
+                                ) : (
+                                    <p className="text-sm text-text-muted font-bold tabular-nums">{sessionDate}: {sessionStartTime} - {sessionEndTime}</p>
+                                )
+                                }
+                            </div>
+                        </div>
+                    )
+                })
+            }
         </div>
     )
 }

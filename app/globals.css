@@ -10,6 +10,8 @@
   --color-text-muted: #6b7280;
   --color-accent: #5865f2;
   --color-border: #1e2035;
+  --color-card-bg: #161B22;
+  --color-card-border: #282D33;
 
   /* Shadcn color mappings */
   --color-background: var(--background);
