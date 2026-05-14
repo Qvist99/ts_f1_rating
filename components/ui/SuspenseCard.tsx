@@ -1,11 +1,11 @@
 import { Suspense } from "react"
 
-const cardClass = `border-2 border-border py-2 px-4 rounded-md w-full h-full`
+const cardClass = `rounded-md w-full h-full border-border`
 
-export default function SuspenseCard({ children, height }: { children: React.ReactNode, height?: number }) {
+export default function SuspenseCard({ children, height, hasBorder = true }: { children: React.ReactNode, height?: number, hasBorder?: boolean }) {
     return (
         <Suspense fallback={<Loading height={height} />}>
-            <div className={cardClass} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
+            <div className={`${cardClass} ${hasBorder ? 'border-2 py-2 px-4' : 'border-0'}`} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
                 {children}
             </div>
         </Suspense>
@@ -15,7 +15,7 @@ export default function SuspenseCard({ children, height }: { children: React.Rea
 
 function Loading({ height }: { height?: number }) {
     return (
-        <div className={`${cardClass} flex justify-center items-center`} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
+        <div className={`${cardClass} py-2 px-4 border-2 flex justify-center items-center`} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
             <Spinner />
         </div>
     )

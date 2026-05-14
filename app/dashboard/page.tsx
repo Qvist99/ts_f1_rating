@@ -1,7 +1,5 @@
 import SuspenseCard from '@/components/ui/SuspenseCard'
 import NextRaceWeekend from '@/components/ui/dashboard/NextRaceWeekend'
-import DriverRankingOverview from '@/components/ui/dashboard/DriverRankingOverview'
-import RaceRatingOverview from '@/components/ui/dashboard/RaceRatingOverview'
 import UsersDriverOpinions from '@/components/ui/dashboard/UsersDriverOpinions'
 export default async function Dashboard() {
 
@@ -13,7 +11,7 @@ export default async function Dashboard() {
           <NextRaceWeekend />
         </SuspenseCard>
 
-        <SuspenseCard height={320}>
+        <SuspenseCard height={370} hasBorder={false}>
           <UsersDriverOpinions />
         </SuspenseCard>
       </div>

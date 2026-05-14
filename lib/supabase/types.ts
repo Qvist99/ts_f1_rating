@@ -70,6 +70,7 @@ export type Database = {
         Row: {
           driver_id: string
           id: string
+          meeting_key: number
           race_id: string
           rating: number
           user_id: string
@@ -77,6 +78,7 @@ export type Database = {
         Insert: {
           driver_id: string
           id?: string
+          meeting_key: number
           race_id: string
           rating: number
           user_id: string
@@ -84,6 +86,7 @@ export type Database = {
         Update: {
           driver_id?: string
           id?: string
+          meeting_key?: number
           race_id?: string
           rating?: number
           user_id?: string
@@ -114,6 +117,7 @@ export type Database = {
           id: string
           is_retired: boolean
           last_name: string
+          team_color: string
           team_name: string
         }
         Insert: {
@@ -124,6 +128,7 @@ export type Database = {
           id?: string
           is_retired?: boolean
           last_name: string
+          team_color: string
           team_name: string
         }
         Update: {
@@ -134,6 +139,7 @@ export type Database = {
           id?: string
           is_retired?: boolean
           last_name?: string
+          team_color?: string
           team_name?: string
         }
         Relationships: []
@@ -141,18 +147,21 @@ export type Database = {
       race_ratings: {
         Row: {
           id: string
+          meeting_key: number
           race_id: string
           rating: number
           user_id: string
         }
         Insert: {
           id?: string
+          meeting_key: number
           race_id: string
           rating: number
           user_id: string
         }
         Update: {
           id?: string
+          meeting_key?: number
           race_id?: string
           rating?: number
           user_id?: string

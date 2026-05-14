@@ -14,6 +14,12 @@ export type Database = MergeDeep<
             sessions: RaceSession[];
           };
         };
+        driver_comments: {
+          Row: {
+            positive_comment: string[];
+            negative_comment: string[];
+          };
+        }
       };
     };
   }

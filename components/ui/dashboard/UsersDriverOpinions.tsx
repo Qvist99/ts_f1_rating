@@ -1,18 +1,35 @@
-
+import { createClient } from "@/lib/supabase/server"
+import Slider from "../Slider";
+import DriverCard from "../DriverCard";
+import FanCommentsCard from "../FanCommentsCard";
 export default async function UsersDriverOpinions() {
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const supabase = await createClient();
 
-    // todo
 
-    // Fech data from the drivers table and drivers_comments table. Maybe from the driver_Ratings table aswell
-    // driver_comments might have too add year too so we can filter on season in the future
+    const { data: drivers, error: driversError } = await supabase.from("drivers").select("*, driver_comments(*), driver_ratings(*, races(race_name, round, date_end))").limit(10, { referencedTable: "driver_comments" })
 
-    // Will display drivers with sliders aswell where one card is for one driver. We will at random select X drivers for the previews. 
-    // Same goes for good and negative comments for each driver. We will at random select X comments and display
+    if (driversError) {
+        console.error("Error fetching drivers:", driversError);
+        return <div>Error loading driver opinions.</div>;
+    }
 
-    // add a button that takes us to a page with all drivers card where you can click a driver and get a bigger overview for the season.
+
+    const fiveRandomDrivers = drivers.sort(() => 0.5 - Math.random()).slice(0, 5);
 
     return (
-        <div>UsersDriverOpinions</div>
+
+        <Slider
+            pages={fiveRandomDrivers.map(driver => (
+                <div className="h-full flex gap-2">
+                    <div className="bg-card-bg border-2 border-card-border h-full w-[50%] rounded ">
+                        <DriverCard driver={driver} />
+                    </div>
+                    <div className="bg-card-bg border-2 border-card-border h-full w-[50%] rounded ">
+                        <FanCommentsCard driver={driver} />
+                    </div>
+                </div>
+            ))}
+        />
+
     )
 }

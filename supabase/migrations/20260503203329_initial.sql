@@ -3,6 +3,7 @@ CREATE table drivers (
     "first_name" text not null,
     "last_name" text not null,
     "team_name" text not null,
+    "team_color" text not null,
     "acronym" text not null,
     "driver_number" integer not null,
     "headshot_url" text not null,
@@ -31,14 +32,16 @@ create table driver_ratings (
     "driver_id" uuid not null references drivers(id) on delete cascade,
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null references auth.users(id) on delete cascade,
-    "rating" integer not null
+    "rating" integer not null,
+    "meeting_key" integer not null
 );
 
 create table race_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null references auth.users(id) on delete cascade,
-    "rating" integer not null
+    "rating" integer not null,
+    "meeting_key" integer not null
 );
 
 create table driver_comments (
@@ -133,3 +136,10 @@ on driver_comments for delete
 to authenticated
 using ((select auth.uid()) = user_id);
 
+
+alter table driver_comments
+add constraint max_3_comments
+check (
+    jsonb_array_length(positive_comment) <= 3 and
+    jsonb_array_length(negative_comment) <= 3
+);

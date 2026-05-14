@@ -24,6 +24,43 @@ export type RaceSession = {
     session_key: string;
 }
 
+export type Drivers = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    team_name: string;
+    team_color: string;
+    acronym:string;
+    driver_number: number;
+    headshot_url: string;
+    is_retired: boolean;
+}
+
+export type RaceRatings = {
+    id: string;
+    race_id: string;
+    user_id: string;
+    rating: number;
+    meeting_key: number;
+}
+
+export type DriverRatings = {
+    id: string;
+    driver_id: string;
+    race_id: string;
+    user_id: string;
+    rating: number;
+    meeting_key: number;
+}
+
+export type DriverComments = {
+    id: string;
+    driver_id: string;
+    user_id: string;
+    positive_comment: string[];
+    negative_comment: string[];
+}
+
 
 export type WeatherDataFromApi = { 
     date: string;
@@ -45,7 +82,7 @@ export type UserRaceRatingFromApi = {
     rating: number;
     user_id: string;
     races: Pick<Races, "race_name">
-}
+} // Remove before we commit
 
 export type AverageRaceRating = {
     race_name: string;
@@ -62,9 +99,17 @@ export type DriverRatingFromApi = {
         first_name: string;
         last_name: string;
     };
-}
+} // Remove before we commit
 
 export type AverageDriverRating = {
     driver_name: string;
     average: number;
+}
+
+
+export type DriverWithRatingAndComments = Drivers & {
+  driver_comments: DriverComments[];
+  driver_ratings: (DriverRatings & {
+    races: Pick<Races, "race_name" | "round" | "date_end">
+  })[];
 }
