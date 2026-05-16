@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Barlow, Barlow_Condensed } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
@@ -13,11 +13,20 @@ export const metadata: Metadata = {
   description: "The fastest way to build apps with Next.js and Supabase",
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  display: "swap",
-  subsets: ["latin"],
-});
+
+const barlow = Barlow({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-barlow',
+})
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-barlow-condensed',
+})
+
+
 
 export default function RootLayout({
   children,
@@ -26,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased mx-24`} >
+      <body className={`${barlow.variable} ${barlowCondensed.variable} antialiased mx-36 overflow-hidden`} >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

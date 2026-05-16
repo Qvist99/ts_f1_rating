@@ -1,22 +1,30 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-bg: #0a0b15;
+  --color-text-primary: #e8eaf2;
+  --color-text-muted: #6b7280;
+  --color-accent: #5865f2;
+  --color-border: #1e2035;
+  --color-card-bg: #161B22;
+  --color-card-border: #282D33;
+
+  --font-sans: var(--font-barlow), sans-serif;
+  --font-condensed: var(--font-barlow-condensed), sans-serif;
+}
+
+
 
 @layer base {
-  :root {
-    --bg: #0a0b15;
-    --text-primary: #e8eaf2;
-    --text-muted: #6b7280;
-    --accent: #5865f2;
-    --border: #1e2035;
-  }
-
   * {
     box-sizing: border-box;
   }
 
   body {
-    background-color: var(--bg);
-    color: var(--text-primary);
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
   }
 }

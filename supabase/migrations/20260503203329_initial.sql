@@ -3,6 +3,7 @@ CREATE table drivers (
     "first_name" text not null,
     "last_name" text not null,
     "team_name" text not null,
+    "team_color" text not null,
     "acronym" text not null,
     "driver_number" integer not null,
     "headshot_url" text not null,
@@ -15,13 +16,15 @@ create table races (
     "circuit_image_url" text not null,
     "country_flag_url" text not null,
     "country_name" text not null,
-    "date_start" text not null,
+    "date_start" timestamptz not null,
+    "date_end" timestamptz not null,
     "is_cancelled" boolean not null default false,
     "race_name" text not null,
     "race_location" text not null,
     "race_official_name" text not null,
     "sessions" jsonb not null,
-    "meeting_key" integer not null
+    "meeting_key" integer not null,
+    "round" integer not null
 );
 
 create table driver_ratings (
@@ -29,14 +32,16 @@ create table driver_ratings (
     "driver_id" uuid not null references drivers(id) on delete cascade,
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null references auth.users(id) on delete cascade,
-    "rating" integer not null
+    "rating" integer not null,
+    "meeting_key" integer not null
 );
 
 create table race_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null references auth.users(id) on delete cascade,
-    "rating" integer not null
+    "rating" integer not null,
+    "meeting_key" integer not null
 );
 
 create table driver_comments (
@@ -75,17 +80,18 @@ using (true);
 create policy "Users can insert their own driver ratings"
 on driver_ratings for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own driver ratings"
 on driver_ratings for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own driver ratings"
 on driver_ratings for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
 
 -- race_ratings: read all ratings if logged in, write only your own
 create policy "Authenticated users can read race ratings"
@@ -96,17 +102,18 @@ using (true);
 create policy "Users can insert their own race ratings"
 on race_ratings for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own race ratings"
 on race_ratings for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own race ratings"
 on race_ratings for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
 
 -- driver_comments: read all comments if logged in, write only your own
 create policy "Authenticated users can read driver comments"
@@ -117,14 +124,22 @@ using (true);
 create policy "Users can insert their own driver comments"
 on driver_comments for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check ((select auth.uid()) = user_id);
 
 create policy "Users can update their own driver comments"
 on driver_comments for update
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
 
 create policy "Users can delete their own driver comments"
 on driver_comments for delete
 to authenticated
-using (auth.uid() = user_id);
+using ((select auth.uid()) = user_id);
+
+
+alter table driver_comments
+add constraint max_3_comments
+check (
+    jsonb_array_length(positive_comment) <= 3 and
+    jsonb_array_length(negative_comment) <= 3
+);
