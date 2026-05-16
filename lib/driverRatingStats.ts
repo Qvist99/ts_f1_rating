@@ -1,4 +1,5 @@
 import { DriverRatingFromApi, DriverWithRatingAndComments } from "@/lib/types";
+import { getAverageRating } from "./averageRatings";
 // Might keep for later or rename in the future for the right panel in the dashboard when we want the driver ratings for all drivers at once
 export function averageDriverRatings(driverRatings: DriverRatingFromApi[]) {
     const grouped = driverRatings.reduce((acc, curr) => {
@@ -11,10 +12,9 @@ export function averageDriverRatings(driverRatings: DriverRatingFromApi[]) {
 
     return Object.values(grouped).map(({ driver_name, ratings }) => ({
         driver_name,
-        average: ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+        average: getAverageRating(ratings)
     }))
 }
-
 
 
 export function getDriverRatingStats(driver: DriverWithRatingAndComments){
@@ -25,7 +25,7 @@ export function getDriverRatingStats(driver: DriverWithRatingAndComments){
         bestRound: null
     };
 
-    const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    const average = getAverageRating(ratings);
 
     const bestRound = driver.driver_ratings.reduce((best, current) => {
         return current.rating > best.rating ? current : best;

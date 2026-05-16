@@ -54,8 +54,6 @@ function TeamTag({ teamName, teamColor }: { teamName: string, teamColor: string 
     const bgColor = `#${teamColor}`
     const textColor = getContrastingTextColor(bgColor)
 
-    console.log(`Team: ${teamName}, Background Color: ${bgColor}, Text Color: ${textColor}`)
-
     return (
         <span className={`px-2 py-0.5 border border-[#3E4248]  rounded font-condensed font-semibold`} style={{ backgroundColor: bgColor, color: textColor }}>
             {teamName}

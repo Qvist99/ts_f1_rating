@@ -1,3 +1,6 @@
+import { Database } from "./supabase/merged-types";
+
+
 export type Races = {
         circuit_image_url: string;
         circuit_name: string;
@@ -64,7 +67,7 @@ export type DriverComments = {
 
 export type WeatherDataFromApi = { 
     date: string;
-    session_key: string;
+    session_key: number;
     track_temperature: number; // Track temperature (°C).
     rainfall: 0 | 1; // Whether there is rainfall.
     wind_direction: number; // Wind direction (°), from 0° to 359°.
@@ -73,6 +76,26 @@ export type WeatherDataFromApi = {
     air_temperature: number; // Air temperature (°C)
     meeting_key: number;
     pressure: number; // Air pressure (mbar).   
+}
+
+export type DriverStandingFromApi = {
+    meeting_key: number;
+    session_key: number;
+    driver_number: number;
+    position_start: number;
+    position_current: number;
+    points_start: number;
+    points_current: number;
+}
+
+export type ConstructorStandingFromApi = {
+    meeting_key: number;
+    session_key: number;
+    team_name: string;
+    position_start: number;
+    position_current: number;
+    points_start: number;
+    points_current: number;
 }
 
 
@@ -112,4 +135,17 @@ export type DriverWithRatingAndComments = Drivers & {
   driver_ratings: (DriverRatings & {
     races: Pick<Races, "race_name" | "round" | "date_end">
   })[];
+}
+
+export type DriverWithRatings = Database["public"]["Tables"]["drivers"]["Row"] & {
+    driver_ratings: {
+        race_id: string;
+        rating: number;
+    }[]
+} 
+
+export type RacesWithRatings = Database["public"]["Tables"]["races"]["Row"] & {
+    race_ratings: {
+        rating: number;
+    }[]
 }

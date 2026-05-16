@@ -2,10 +2,10 @@ import { Suspense } from "react"
 
 const cardClass = `rounded-md w-full h-full border-border`
 
-export default function SuspenseCard({ children, height, hasBorder = true }: { children: React.ReactNode, height?: number, hasBorder?: boolean }) {
+export default function SuspenseCard({ children, height, hasBorder = true, applyPadding = true }: { children: React.ReactNode, height?: number, hasBorder?: boolean, applyPadding?: boolean }) {
     return (
         <Suspense fallback={<Loading height={height} />}>
-            <div className={`${cardClass} ${hasBorder ? 'border-2 py-2 px-4' : 'border-0'}`} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
+            <div className={`${cardClass} ${hasBorder ? 'border-2' : 'border-0'} ${applyPadding ? 'py-2 px-4' : ''}`} style={{ minHeight: height ? `${height}px` : 'fit-content' }}>
                 {children}
             </div>
         </Suspense>
