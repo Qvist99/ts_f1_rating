@@ -31,7 +31,7 @@ create table driver_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "driver_id" uuid not null references drivers(id) on delete cascade,
     "race_id" uuid not null references races(id) on delete cascade,
-    "user_id" uuid not null references auth.users(id) on delete cascade,
+    "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
     "rating" integer not null,
     "meeting_key" integer not null
 );
@@ -39,7 +39,7 @@ create table driver_ratings (
 create table race_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "race_id" uuid not null references races(id) on delete cascade,
-    "user_id" uuid not null references auth.users(id) on delete cascade,
+    "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
     "rating" integer not null,
     "meeting_key" integer not null
 );
@@ -47,7 +47,7 @@ create table race_ratings (
 create table driver_comments (
     "id" uuid primary key default gen_random_uuid(),
     "driver_id" uuid not null references drivers(id) on delete cascade,
-    "user_id" uuid not null references auth.users(id) on delete cascade,
+    "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
     "positive_comment" jsonb not null,
     "negative_comment" jsonb not null
 );
@@ -143,3 +143,12 @@ check (
     jsonb_array_length(positive_comment) <= 3 and
     jsonb_array_length(negative_comment) <= 3
 );
+
+alter table driver_ratings
+    add constraint driver_ratings_unique
+    unique (driver_id, race_id, user_id);
+
+
+alter table race_ratings 
+    add constraint race_ratings_unique
+    unique (race_id, user_id);

@@ -1,5 +1,5 @@
 import { Database } from "./supabase/merged-types";
-
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 export type Races = {
         circuit_image_url: string;
@@ -138,14 +138,17 @@ export type DriverWithRatingAndComments = Drivers & {
 }
 
 export type DriverWithRatings = Database["public"]["Tables"]["drivers"]["Row"] & {
-    driver_ratings: {
-        race_id: string;
-        rating: number;
-    }[]
+    driver_ratings: Database["public"]["Tables"]["driver_ratings"]["Row"][];
 } 
 
-export type RacesWithRatings = Database["public"]["Tables"]["races"]["Row"] & {
-    race_ratings: {
-        rating: number;
-    }[]
+export type RaceWithRatings = Database["public"]["Tables"]["races"]["Row"] & {
+    race_ratings: Database["public"]["Tables"]["race_ratings"]["Row"][];
 }
+
+export type DriversWithRatingsPromise = PromiseLike<PostgrestSingleResponse<DriverWithRatings[]>>
+
+export type DriverWithRatingsPromise = PromiseLike<PostgrestSingleResponse<DriverWithRatings>>
+
+export type RacesWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings[]>>
+
+export type RaceWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings>>

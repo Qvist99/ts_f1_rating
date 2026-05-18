@@ -1,12 +1,11 @@
-import { ConstructorStandingFromApi, DriverWithRatings } from "@/lib/types"
-import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { ConstructorStandingFromApi, DriverWithRatings, DriversWithRatingsPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
 
 
 export default function ConstructorStandings({ constructorStandingsPromise, driversWithRatingsPromise }: {
     constructorStandingsPromise: Promise<ConstructorStandingFromApi[]>,
-    driversWithRatingsPromise: PromiseLike<PostgrestSingleResponse<DriverWithRatings[]>>
+    driversWithRatingsPromise: DriversWithRatingsPromise
 }) {
 
     const constructorStandings = use(constructorStandingsPromise)

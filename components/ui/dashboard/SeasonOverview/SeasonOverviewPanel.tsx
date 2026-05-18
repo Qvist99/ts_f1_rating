@@ -21,9 +21,9 @@ export default async function SeasonOverviewPanel() {
         .order("date_end", { ascending: false })
         .limit(5)
 
-    const driversWithRatingsPromise = supabase.from("drivers").select("*, driver_ratings(race_id, rating)")
+    const driversWithRatingsPromise = supabase.from("drivers").select("*, driver_ratings(*)")
 
-    const racesWithRatingsPromise = supabase.from("races").select("*, race_ratings(rating)")
+    const racesWithRatingsPromise = supabase.from("races").select("*, race_ratings(*)")
 
     const driverStandingsPromise = fetch("https://api.openf1.org/v1/championship_drivers?session_key=latest&meeting_key=latest", {
         next: {

@@ -11,9 +11,6 @@ export default async function NextRaceWeekend() {
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
-    //TODO
-
-    // Either fetch all races and filter out the closest race or make it a date field in supabase so we can query it directly.
     const { data: raceData, error: raceDataError } = await supabase
         .from("races")
         .select("*")
@@ -73,7 +70,7 @@ export default async function NextRaceWeekend() {
                 {isRaceWeekStarted ? (
 
                     <Link
-                        href={`/driverRating/${raceData.id}`}
+                        href={`dashboard/rate/${raceData.id}`}
                         className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors font-condensed font-bold"
 
                     >

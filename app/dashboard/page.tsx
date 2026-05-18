@@ -5,7 +5,7 @@ import SeasonOverviewPanel from '@/components/ui/dashboard/SeasonOverview/Season
 export default async function Dashboard() {
   // We need to overlook how we handle heights here. Probably will be a headache to maintain.
   return (
-    <div className="flex flex-row justify-between gap-10 max-h-[calc(100vh-126px)] ">
+    <div className="flex flex-row justify-between gap-10 max-h-[calc(100vh-126px)] pt-[76px]">
 
       <div className='leftSide w-[60%] flex flex-col gap-2 '>
         <SuspenseCard height={400}>
