@@ -1,5 +1,5 @@
 "use client"
-import { DriverWithRatings } from "@/lib/types"
+import { DriversWithRatingsPromise } from "@/lib/types"
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { use } from "react"
 import StandingsList from "./StandingsList"
@@ -18,7 +18,7 @@ const filters: { label: string, value: RatingFilter }[] = [
 
 
 export default function DriverRatings({ driverWithRatingsPromise, lastFiveRacesPromise }: {
-    driverWithRatingsPromise: PromiseLike<PostgrestSingleResponse<DriverWithRatings[]>>
+    driverWithRatingsPromise: DriversWithRatingsPromise
     lastFiveRacesPromise: PromiseLike<PostgrestSingleResponse<{ id: string }[]>>
 }) {
 

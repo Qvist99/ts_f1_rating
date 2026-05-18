@@ -1,6 +1,5 @@
 
-import { DriverStandingFromApi, DriverWithRatings } from "@/lib/types"
-import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { DriverStandingFromApi, DriversWithRatingsPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
 
@@ -8,7 +7,7 @@ import StandingsList from "./StandingsList"
 
 export default function DriverStandings({ driverStandingsPromise, driversWithRatingsPromise }: {
     driverStandingsPromise: Promise<DriverStandingFromApi[]>,
-    driversWithRatingsPromise: PromiseLike<PostgrestSingleResponse<DriverWithRatings[]>>
+    driversWithRatingsPromise: DriversWithRatingsPromise
 }) {
 
     const driverStandings = use(driverStandingsPromise)

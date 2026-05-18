@@ -5,7 +5,7 @@ import StandingsList from "./StandingsList"
 import { getAverageRating } from "@/lib/averageRatings"
 import { useState } from "react"
 import FilterPills from "./FilterPills"
-import { RacesWithRatings } from "@/lib/types"
+import { RacesWithRatingsPromise } from "@/lib/types"
 
 
 type RatingFilter = "average" | "last5" | "last3"
@@ -19,7 +19,7 @@ const filters: { label: string, value: RatingFilter }[] = [
 
 export default function RaceRatings({ racesWithRatingsPromise, lastFiveRacesPromise }:
     {
-        racesWithRatingsPromise: PromiseLike<PostgrestSingleResponse<RacesWithRatings[]>>,
+        racesWithRatingsPromise: RacesWithRatingsPromise,
         lastFiveRacesPromise: PromiseLike<PostgrestSingleResponse<{ id: string }[]>>
     }) {
 

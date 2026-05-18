@@ -47,7 +47,7 @@ export type Database = {
           id?: string
           negative_comment: Json
           positive_comment: Json
-          user_id: string
+          user_id?: string
         }
         Update: {
           driver_id?: string
@@ -81,7 +81,7 @@ export type Database = {
           meeting_key: number
           race_id: string
           rating: number
-          user_id: string
+          user_id?: string
         }
         Update: {
           driver_id?: string
@@ -157,7 +157,7 @@ export type Database = {
           meeting_key: number
           race_id: string
           rating: number
-          user_id: string
+          user_id?: string
         }
         Update: {
           id?: string
