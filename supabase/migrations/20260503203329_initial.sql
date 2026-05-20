@@ -182,19 +182,35 @@ select
     -- Season average
     round(avg(dr.rating)::numeric, 1) as avg_rating_season,
 
-    -- Last 5 races
-    round(avg(dr.rating) filter (
-        where dr.race_id in (
-            select id from races where date_end < now() order by date_end desc limit 5
-        )
-    )::numeric, 1) as avg_rating_last_5,
+    -- Last 5 non-cancelled races
+    round(
+        avg(dr.rating) filter (
+            where dr.race_id in (
+                select r.id
+                from races r
+                where r.date_end < now()
+                  and coalesce(r.is_cancelled, false) = false
+                order by r.date_end desc
+                limit 5
+            )
+        )::numeric,
+        1
+    ) as avg_rating_last_5,
 
-    -- Last 3 races
-    round(avg(dr.rating) filter (
-        where dr.race_id in (
-            select id from races where date_end < now() order by date_end desc limit 3
-        )
-    )::numeric, 1) as avg_rating_last_3,
+    -- Last 3 non-cancelled races
+    round(
+        avg(dr.rating) filter (
+            where dr.race_id in (
+                select r.id
+                from races r
+                where r.date_end < now()
+                  and coalesce(r.is_cancelled, false) = false
+                order by r.date_end desc
+                limit 3
+            )
+        )::numeric,
+        1
+    ) as avg_rating_last_3,
 
     -- Best round average
     round((
@@ -208,14 +224,24 @@ select
 
     -- Comment counts
     count(distinct dc.id) as total_comments,
-    count(distinct dc.id) filter (where dc.type = 'positive') as positive_comments,
-    count(distinct dc.id) filter (where dc.type = 'negative') as negative_comments,
 
-    -- Current user's comment count (returns 0 if not authenticated)
-    count(distinct dc.id) filter (where dc.user_id = auth.uid()) as my_comments
+    count(distinct dc.id) filter (
+        where dc.type = 'positive'
+    ) as positive_comments,
+
+    count(distinct dc.id) filter (
+        where dc.type = 'negative'
+    ) as negative_comments,
+
+    -- Current user's comment count
+    count(distinct dc.id) filter (
+        where dc.user_id = auth.uid()
+    ) as my_comments
 
 from driver_ratings dr
-left join driver_comments dc on dc.driver_id = dr.driver_id
+left join driver_comments dc
+    on dc.driver_id = dr.driver_id
+
 group by dr.driver_id;
 
 -- Revoke from anon and authenticated, grant only to authenticated
@@ -223,3 +249,46 @@ revoke select on public.driver_stats from anon;
 revoke select on public.driver_stats from authenticated;
 grant select on public.driver_stats to authenticated;
 
+
+
+create or replace view race_rating_stats
+with (security_invoker = true)
+as
+select
+    rr.race_id,
+
+    r.round,
+    r.race_name,
+    r.race_location,
+    r.country_name,
+    r.date_start,
+    r.date_end,
+    r.is_cancelled,
+
+    round(avg(rr.rating)::numeric, 1) as avg_rating,
+
+    count(rr.id) as total_ratings
+
+from race_ratings rr
+
+join races r
+    on r.id = rr.race_id
+
+where r.is_cancelled = false
+
+group by
+    rr.race_id,
+    r.round,
+    r.race_name,
+    r.race_location,
+    r.country_name,
+    r.date_start,
+    r.date_end,
+    r.is_cancelled;
+
+    -- Remove public access
+revoke select on public.race_rating_stats from anon;
+revoke select on public.race_rating_stats from authenticated;
+
+-- Allow only signed-in users
+grant select on public.race_rating_stats to authenticated;

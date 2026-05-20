@@ -254,6 +254,29 @@ export type Database = {
           },
         ]
       }
+      race_rating_stats: {
+        Row: {
+          avg_rating: number | null
+          country_name: string | null
+          date_end: string | null
+          date_start: string | null
+          is_cancelled: boolean | null
+          race_id: string | null
+          race_location: string | null
+          race_name: string | null
+          round: number | null
+          total_ratings: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "race_ratings_race_id_fkey"
+            columns: ["race_id"]
+            isOneToOne: false
+            referencedRelation: "races"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

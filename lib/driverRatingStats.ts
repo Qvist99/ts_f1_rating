@@ -1,7 +1,7 @@
-import { DriverWithRatingAndComments } from "@/lib/types";
+import { DriverWithCommentsAndRatings } from "@/lib/types";
 import { getAverageRating } from "./averageRatings";
 
-export function getDriverRatingStats(driver: DriverWithRatingAndComments){
+export function getDriverRatingStats(driver: DriverWithCommentsAndRatings){
     const ratings = driver.driver_ratings.map(r => r.rating);
 
     if(ratings.length === 0) return {

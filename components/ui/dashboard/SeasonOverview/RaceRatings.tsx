@@ -2,10 +2,9 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { use } from "react"
 import StandingsList from "./StandingsList"
-import { getAverageRating } from "@/lib/averageRatings"
 import { useState } from "react"
 import FilterPills from "./FilterPills"
-import { RacesWithRatingsPromise } from "@/lib/types"
+import { RaceRatingStatsPromise } from "@/lib/types"
 
 
 type RatingFilter = "average" | "last5" | "last3"
@@ -17,16 +16,18 @@ const filters: { label: string, value: RatingFilter }[] = [
     { label: "Last 3", value: "last3" },
 ]
 
-export default function RaceRatings({ racesWithRatingsPromise, lastFiveRacesPromise }:
-    {
-        racesWithRatingsPromise: RacesWithRatingsPromise,
-        lastFiveRacesPromise: PromiseLike<PostgrestSingleResponse<{ id: string }[]>>
-    }) {
+
+interface RaceRatingsProps {
+    raceRatingStatsPromise: RaceRatingStatsPromise,
+    lastFiveRacesPromise: PromiseLike<PostgrestSingleResponse<{ id: string }[]>>
+}
+
+export default function RaceRatings({ raceRatingStatsPromise, lastFiveRacesPromise }: RaceRatingsProps) {
 
     const [typeOfRating, setTypeOfRating] = useState<RatingFilter>("average")
 
 
-    const { data: racesWithRatings, error: racesWithRatingsError } = use(racesWithRatingsPromise)
+    const { data: racesWithRatings, error: racesWithRatingsError } = use(raceRatingStatsPromise)
     const { data: lastFiveRaces, error: lastFiveRacesError } = use(lastFiveRacesPromise)
 
     if (racesWithRatingsError || lastFiveRacesError) {
@@ -38,22 +39,22 @@ export default function RaceRatings({ racesWithRatingsPromise, lastFiveRacesProm
     const lastThreeRaceIds = lastFiveRaceIds.slice(0, 3)
 
     const filteredRacesWithRatings = racesWithRatings.filter(r => {
-        if (typeOfRating === "last5") return lastFiveRaceIds.includes(r.id)
-        if (typeOfRating === "last3") return lastThreeRaceIds.includes(r.id)
+        if (typeOfRating === "last5") return lastFiveRaceIds.includes(r.race_id || "")
+        if (typeOfRating === "last3") return lastThreeRaceIds.includes(r.race_id || "")
         return true
     })
 
     const standingsListItems = filteredRacesWithRatings.map((race) => {
-        const ratings = race.race_ratings.map(r => r.rating)
-        const averageRating = getAverageRating(ratings)
-
+        const avgRating = race.avg_rating || 0
+        const mainLabel = race.race_name || ""
+        const subLabel = `Round ${race.round || ""}`
         return {
             position: 0,
             previous_position: 0,
-            value: averageRating,
-            mainLabel: race.race_name,
+            value: avgRating,
+            mainLabel: mainLabel,
             hexColor: "#282D33",
-            subLabel: `Round ${race.round}`,
+            subLabel: subLabel,
         }
     })
 

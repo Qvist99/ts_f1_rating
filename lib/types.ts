@@ -14,6 +14,8 @@ export type DriverComments = Database["public"]["Tables"]["driver_comments"]["Ro
 
 export type DriverStats = Database["public"]["Views"]["driver_stats"]["Row"]
 
+export type RaceRatingStats = Database["public"]["Views"]["race_rating_stats"]["Row"]
+
 export type RaceSession = {
     date_end: string;
     date_start: string;
@@ -58,9 +60,11 @@ export type ConstructorStandingFromApi = {
 }
 
 
-export type DriverWithRatingAndComments = Drivers & {
-  driver_comments: DriverComments[];
-  driver_ratings: DriverRatings[];
+export type DriverWithCommentsAndRatings = Drivers & {
+    driver_comments: DriverComments[]
+    driver_ratings: (DriverRatings & {
+        races: Pick<Races, "race_name" | "round" | "date_end"> | null
+    })[]
 }
 
 export type DriverWithRatings = Drivers & {
@@ -90,3 +94,6 @@ export interface Comment {
 export type DriverWithStats = Drivers & {
     driver_stats: DriverStats[];
 }
+
+export type DriversWithStatsPromise = PromiseLike<PostgrestSingleResponse<DriverWithStats[]>>
+export type RaceRatingStatsPromise = PromiseLike<PostgrestSingleResponse<RaceRatingStats[]>>

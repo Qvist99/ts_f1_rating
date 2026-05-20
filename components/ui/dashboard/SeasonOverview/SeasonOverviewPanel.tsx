@@ -21,9 +21,9 @@ export default async function SeasonOverviewPanel() {
         .order("date_end", { ascending: false })
         .limit(5)
 
-    const driversWithRatingsPromise = supabase.from("drivers").select("*, driver_ratings(*)")
+    const driversWithStatsPromise = supabase.from("drivers").select("*, driver_stats(*)")
 
-    const racesWithRatingsPromise = supabase.from("races").select("*, race_ratings(*)")
+    const raceRatingStatsPromise = supabase.from("race_rating_stats").select("*")
 
     const driverStandingsPromise = fetch("https://api.openf1.org/v1/championship_drivers?session_key=latest&meeting_key=latest", {
         next: {
@@ -41,10 +41,10 @@ export default async function SeasonOverviewPanel() {
         <div className="h-full overflow-hidden">
             <Tabs
                 tabs={[
-                    { id: "Drivers", label: "Drivers", content: <DriverStandings driverStandingsPromise={driverStandingsPromise} driversWithRatingsPromise={driversWithRatingsPromise} /> },
-                    { id: "Constructors", label: "Constructors", content: <ConstructorStandings constructorStandingsPromise={constructorStandingsPromise} driversWithRatingsPromise={driversWithRatingsPromise} /> },
-                    { id: "Driver Ratings", label: "Driver Ratings", content: <DriverRatings driverWithRatingsPromise={driversWithRatingsPromise} lastFiveRacesPromise={lastFiveRacesPromise} /> },
-                    { id: "Race Ratings", label: "Race Ratings", content: <RaceRatings racesWithRatingsPromise={racesWithRatingsPromise} lastFiveRacesPromise={lastFiveRacesPromise} /> },
+                    { id: "Drivers", label: "Drivers", content: <DriverStandings driverStandingsPromise={driverStandingsPromise} driversWithStatsPromise={driversWithStatsPromise} /> },
+                    { id: "Constructors", label: "Constructors", content: <ConstructorStandings constructorStandingsPromise={constructorStandingsPromise} driversWithStatsPromise={driversWithStatsPromise} /> },
+                    { id: "Driver Ratings", label: "Driver Ratings", content: <DriverRatings driverWithStatsPromise={driversWithStatsPromise} /> },
+                    { id: "Race Ratings", label: "Race Ratings", content: <RaceRatings raceRatingStatsPromise={raceRatingStatsPromise} lastFiveRacesPromise={lastFiveRacesPromise} /> },
                 ]}
                 defaultTab="Drivers"
             />

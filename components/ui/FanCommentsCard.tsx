@@ -1,10 +1,10 @@
 import Slider from "./Slider"
-import { DriverWithRatingAndComments } from "@/lib/types"
+import { DriverWithCommentsAndRatings } from "@/lib/types"
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { shuffleArray } from "@/lib/utils";
 
 
-export default function FanCommentsCard({ driver }: { driver: DriverWithRatingAndComments }) {
+export default function FanCommentsCard({ driver }: { driver: DriverWithCommentsAndRatings }) {
     const commentsPerSlide = 3;
 
     const positiveComments = driver.driver_comments.filter(comment => comment.type === "positive");
