@@ -19,7 +19,8 @@ export default function DriverGridFooter({ race }: {
             .upsert(
                 { race_id: race.id, meeting_key: race.meeting_key, rating: val },
                 { onConflict: "race_id, user_id" }
-            )
+            ),
+        type: "race"
     })
 
 

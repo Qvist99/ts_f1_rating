@@ -4,12 +4,14 @@ import { useEffect, useState, useRef } from "react"
 import { useRatingStore } from "@/components/providers/RatingsProvider"
 type BorderState = 'idle' | 'updating' | 'saving' | 'saved' | 'error'
 
-export function useRating({ initialRating, onSave }: {
+export function useRating({ initialRating, onSave, type }: {
     initialRating?: number
     onSave: (val: number) => Promise<{ error: any }>
+    type: 'driver' | 'race'
 }) {
     const incrementPendingCount = useRatingStore(s => s.incrementPendingCount)
     const decrementPendingCount = useRatingStore(s => s.decrementPendingCount)
+    const incrementRatedDriverCount = useRatingStore(s => s.incrementRatedDriverCount)
 
     const [localRating, setLocalRating] = useState<number | undefined>(initialRating)
     const [borderState, setBorderState] = useState<BorderState>('idle')
@@ -28,6 +30,9 @@ export function useRating({ initialRating, onSave }: {
                 const { error } = await onSave(val)
                 if (error) throw error
                 setBorderState('saved')
+                 if (type === 'driver' && !initialRating) {
+                    incrementRatedDriverCount()
+                }
                 setTimeout(() => setBorderState('idle'), 1800)
             } catch {
                 setBorderState('error')

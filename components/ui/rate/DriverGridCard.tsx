@@ -14,7 +14,8 @@ export default function DriverGridCard({ driver, race, }: { driver: DriverWithRa
             .upsert(
                 { driver_id: driver.id, race_id: race.id, meeting_key: race.meeting_key, rating: val },
                 { onConflict: 'driver_id, race_id, user_id' }
-            )
+            ),
+        type: "driver"
     })
 
 
