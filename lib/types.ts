@@ -1,6 +1,6 @@
 import { Database } from "./supabase/merged-types";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-
+// Should really overlook the types after v1 is done and use generated types from supabase for better type safety and less maintenance. But for now this is good enough and faster to iterate with.
 export type Races = {
         circuit_image_url: string;
         circuit_name: string;
@@ -152,3 +152,17 @@ export type DriverWithRatingsPromise = PromiseLike<PostgrestSingleResponse<Drive
 export type RacesWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings[]>>
 
 export type RaceWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings>>
+
+export interface Comment {
+    id: string
+    user_id: string
+    text: string
+    type: "positive" | "negative"
+    updated_at: string
+}
+
+export type DriverStats = Database["public"]["Views"]["driver_stats"]["Row"]
+
+export type DriverWithStats = Database["public"]["Tables"]["drivers"]["Row"] & {
+    driver_stats: DriverStats[];
+}

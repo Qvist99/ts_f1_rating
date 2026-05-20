@@ -38,22 +38,25 @@ export type Database = {
         Row: {
           driver_id: string
           id: string
-          negative_comment: Json
-          positive_comment: Json
+          text: string
+          type: Database["public"]["Enums"]["comment_type"]
+          updated_at: string
           user_id: string
         }
         Insert: {
           driver_id: string
           id?: string
-          negative_comment: Json
-          positive_comment: Json
+          text: string
+          type: Database["public"]["Enums"]["comment_type"]
+          updated_at?: string
           user_id?: string
         }
         Update: {
           driver_id?: string
           id?: string
-          negative_comment?: Json
-          positive_comment?: Json
+          text?: string
+          type?: Database["public"]["Enums"]["comment_type"]
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -229,13 +232,34 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      driver_stats: {
+        Row: {
+          avg_rating_best_round: number | null
+          avg_rating_last_3: number | null
+          avg_rating_last_5: number | null
+          avg_rating_season: number | null
+          driver_id: string | null
+          my_comments: number | null
+          negative_comments: number | null
+          positive_comments: number | null
+          total_comments: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "driver_ratings_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      comment_type: "positive" | "negative"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -365,7 +389,9 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      comment_type: ["positive", "negative"],
+    },
   },
 } as const
 

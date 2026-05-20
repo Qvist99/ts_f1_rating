@@ -39,7 +39,7 @@ export default function FanCommentsCard({ driver }: { driver: DriverWithRatingAn
                                 <Comment key={idx} comment={c.comment} type={c.type} />
                             ))}
                         </div>
-                    ))} action={{ label: "Have Your Say", href: `/drivers` }}
+                    ))} action={{ label: "Have Your Say", href: `/dashboard/user-comments` }}
                 />
             </div>
         </div>
