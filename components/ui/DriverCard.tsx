@@ -1,9 +1,9 @@
-import { DriverWithRatingAndComments } from "@/lib/types"
+import { DriverWithCommentsAndRatings } from "@/lib/types"
 import Image from "next/image"
 import { getDriverRatingStats } from "@/lib/driverRatingStats";
 
 
-export default function DriverCard({ driver }: { driver: DriverWithRatingAndComments }) {
+export default function DriverCard({ driver }: { driver: DriverWithCommentsAndRatings }) {
     const averageRating = getDriverRatingStats(driver);
 
     const currYear = new Date().getFullYear();
@@ -38,10 +38,10 @@ export default function DriverCard({ driver }: { driver: DriverWithRatingAndComm
             <div className="mt-2">
                 {averageRating.bestRound && (
                     <BestRace
-                        raceName={averageRating.bestRound.races.race_name}
+                        raceName={averageRating.bestRound.races?.race_name || ""}
                         rating={averageRating.bestRound.rating}
-                        round={averageRating.bestRound.races.round}
-                        date={averageRating.bestRound.races.date_end}
+                        round={averageRating.bestRound.races?.round || 0}
+                        date={averageRating.bestRound.races?.date_end || ""}
                     />
                 )}
             </div>

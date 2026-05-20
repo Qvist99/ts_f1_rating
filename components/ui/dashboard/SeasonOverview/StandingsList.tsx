@@ -77,6 +77,11 @@ export default function StandingsList({ items, valueSuffix, showRatingBar, showD
 
                 )
             })}
+            {items.length === 0 && (
+                <div className="py-4 text-center text-text-muted">
+                    No ratings yet
+                </div>
+            )}
         </div>
     )
 }

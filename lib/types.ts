@@ -1,22 +1,20 @@
 import { Database } from "./supabase/merged-types";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
-export type Races = {
-        circuit_image_url: string;
-        circuit_name: string;
-        country_flag_url: string;
-        country_name: string;
-        date_end: string;
-        date_start: string;
-        id: string;
-        is_cancelled: boolean;
-        meeting_key: number;
-        race_location: string;
-        race_name: string;
-        race_official_name: string;
-        sessions: RaceSession[];
-        round: number;
-}
+// Base data from tables 
+export type Races = Database["public"]["Tables"]["races"]["Row"]
+
+export type Drivers = Database["public"]["Tables"]["drivers"]["Row"]
+
+export type RaceRatings = Database["public"]["Tables"]["race_ratings"]["Row"]
+
+export type DriverRatings = Database["public"]["Tables"]["driver_ratings"]["Row"]
+
+export type DriverComments = Database["public"]["Tables"]["driver_comments"]["Row"]
+
+export type DriverStats = Database["public"]["Views"]["driver_stats"]["Row"]
+
+export type RaceRatingStats = Database["public"]["Views"]["race_rating_stats"]["Row"]
 
 export type RaceSession = {
     date_end: string;
@@ -25,43 +23,6 @@ export type RaceSession = {
     session_name: "Practice 1" | "Practice 2" | "Practice 3" | "Qualifying" | "Sprint" | "Race"
     session_type: "Practice" | "Qualifying" | "Race"
     session_key: string;
-}
-
-export type Drivers = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    team_name: string;
-    team_color: string;
-    acronym:string;
-    driver_number: number;
-    headshot_url: string;
-    is_retired: boolean;
-}
-
-export type RaceRatings = {
-    id: string;
-    race_id: string;
-    user_id: string;
-    rating: number;
-    meeting_key: number;
-}
-
-export type DriverRatings = {
-    id: string;
-    driver_id: string;
-    race_id: string;
-    user_id: string;
-    rating: number;
-    meeting_key: number;
-}
-
-export type DriverComments = {
-    id: string;
-    driver_id: string;
-    user_id: string;
-    positive_comment: string[];
-    negative_comment: string[];
 }
 
 
@@ -99,50 +60,19 @@ export type ConstructorStandingFromApi = {
 }
 
 
-export type UserRaceRatingFromApi = {
-    id: string;
-    race_id: string;
-    rating: number;
-    user_id: string;
-    races: Pick<Races, "race_name">
-} // Remove before we commit
-
-export type AverageRaceRating = {
-    race_name: string;
-    average: number;
+export type DriverWithCommentsAndRatings = Drivers & {
+    driver_comments: DriverComments[]
+    driver_ratings: (DriverRatings & {
+        races: Pick<Races, "race_name" | "round" | "date_end"> | null
+    })[]
 }
 
-export type DriverRatingFromApi = {
-    driver_id: string;
-    id: string;
-    race_id: string;
-    rating: number;
-    user_id: string;
-    drivers: {
-        first_name: string;
-        last_name: string;
-    };
-} // Remove before we commit
-
-export type AverageDriverRating = {
-    driver_name: string;
-    average: number;
-}
-
-
-export type DriverWithRatingAndComments = Drivers & {
-  driver_comments: DriverComments[];
-  driver_ratings: (DriverRatings & {
-    races: Pick<Races, "race_name" | "round" | "date_end">
-  })[];
-}
-
-export type DriverWithRatings = Database["public"]["Tables"]["drivers"]["Row"] & {
-    driver_ratings: Database["public"]["Tables"]["driver_ratings"]["Row"][];
+export type DriverWithRatings = Drivers & {
+    driver_ratings: DriverRatings[];
 } 
 
-export type RaceWithRatings = Database["public"]["Tables"]["races"]["Row"] & {
-    race_ratings: Database["public"]["Tables"]["race_ratings"]["Row"][];
+export type RaceWithRatings = Races & {
+    race_ratings: RaceRatings[];
 }
 
 export type DriversWithRatingsPromise = PromiseLike<PostgrestSingleResponse<DriverWithRatings[]>>
@@ -152,3 +82,18 @@ export type DriverWithRatingsPromise = PromiseLike<PostgrestSingleResponse<Drive
 export type RacesWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings[]>>
 
 export type RaceWithRatingsPromise = PromiseLike<PostgrestSingleResponse<RaceWithRatings>>
+
+export interface Comment {
+    id: string
+    user_id: string
+    text: string
+    type: "positive" | "negative"
+    updated_at: string
+}
+
+export type DriverWithStats = Drivers & {
+    driver_stats: DriverStats[];
+}
+
+export type DriversWithStatsPromise = PromiseLike<PostgrestSingleResponse<DriverWithStats[]>>
+export type RaceRatingStatsPromise = PromiseLike<PostgrestSingleResponse<RaceRatingStats[]>>

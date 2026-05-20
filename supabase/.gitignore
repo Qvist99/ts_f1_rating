@@ -11,3 +11,6 @@
 
 # Seeding function file
 seed.ts
+
+# Snippets folder as currently generating snippets from supabase sql editor
+/snippets

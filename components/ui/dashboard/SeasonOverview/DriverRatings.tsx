@@ -1,9 +1,7 @@
 "use client"
-import { DriversWithRatingsPromise } from "@/lib/types"
-import { PostgrestSingleResponse } from "@supabase/supabase-js"
+import { DriversWithStatsPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
-import { getAverageRating } from "@/lib/averageRatings"
 import { useState } from "react"
 import FilterPills from "./FilterPills"
 
@@ -16,44 +14,49 @@ const filters: { label: string, value: RatingFilter }[] = [
     { label: "Last 3", value: "last3" },
 ]
 
+interface DriverWithRatingsProps {
+    driverWithStatsPromise: DriversWithStatsPromise,
+}
 
-export default function DriverRatings({ driverWithRatingsPromise, lastFiveRacesPromise }: {
-    driverWithRatingsPromise: DriversWithRatingsPromise
-    lastFiveRacesPromise: PromiseLike<PostgrestSingleResponse<{ id: string }[]>>
-}) {
+
+export default function DriverRatings({ driverWithStatsPromise }: DriverWithRatingsProps) {
 
     const [typeOfRating, setTypeOfRating] = useState<RatingFilter>("average")
 
-    const { data: driversWithRatings, error: driversWithRatingsError } = use(driverWithRatingsPromise)
-    const { data: lastFiveRaces, error: lastFiveRacesError } = use(lastFiveRacesPromise)
+    const { data: driversWithStats, error: driversWithStatsError } = use(driverWithStatsPromise)
 
-    if (driversWithRatingsError || lastFiveRacesError) {
-        console.log(driversWithRatingsError || lastFiveRacesError)
+    if (driversWithStatsError) {
+        console.error("Error fetching driver stats:", driversWithStatsError)
         return <div></div>
     }
 
-    const lastFiveRaceIds = lastFiveRaces.map(r => r.id)
-    const lastThreeRaceIds = lastFiveRaceIds.slice(0, 3)
+    // Make sure we only render drivers that have stats.
+    const standingsListItems = driversWithStats
+        .map((driver) => {
+            const stats = driver.driver_stats?.[0]
 
+            if (!stats) return null
 
-    const standingsListItems = driversWithRatings.map((driver) => {
-        const filteredRatings = driver.driver_ratings.filter(r => {
-            if (typeOfRating === "last5") return lastFiveRaceIds.includes(r.race_id)
-            if (typeOfRating === "last3") return lastThreeRaceIds.includes(r.race_id)
-            return true
+            const averageRating =
+                typeOfRating === "average"
+                    ? stats.avg_rating_season
+                    : typeOfRating === "last5"
+                        ? stats.avg_rating_last_5
+                        : stats.avg_rating_last_3
+
+            // Skip drivers without the selected rating
+            if (averageRating == null) return null
+
+            return {
+                position: 0,
+                previous_position: 0,
+                value: averageRating,
+                mainLabel: `${driver.first_name} ${driver.last_name}`,
+                hexColor: `#${driver.team_color}`,
+                subLabel: driver.team_name
+            }
         })
-
-        const averageRating = getAverageRating(filteredRatings.map(r => r.rating))
-
-        return {
-            position: 0,
-            previous_position: 0,
-            value: averageRating,
-            mainLabel: `${driver.first_name} ${driver.last_name}`,
-            hexColor: `#${driver.team_color}`,
-            subLabel: driver.team_name
-        }
-    })
+        .filter((item): item is NonNullable<typeof item> => item !== null)
 
 
     // Sort drivers by average rating in descending order and assign positions

@@ -44,12 +44,15 @@ create table race_ratings (
     "meeting_key" integer not null
 );
 
+create type comment_type as enum ('positive', 'negative');
+
 create table driver_comments (
     "id" uuid primary key default gen_random_uuid(),
     "driver_id" uuid not null references drivers(id) on delete cascade,
     "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
-    "positive_comment" jsonb not null,
-    "negative_comment" jsonb not null
+    "type" comment_type not null,
+    "text" text not null check (char_length(text) <= 110),
+    "updated_at" timestamptz not null default now()
 );
 
 -- RLS
@@ -136,14 +139,6 @@ on driver_comments for delete
 to authenticated
 using ((select auth.uid()) = user_id);
 
-
-alter table driver_comments
-add constraint max_3_comments
-check (
-    jsonb_array_length(positive_comment) <= 3 and
-    jsonb_array_length(negative_comment) <= 3
-);
-
 alter table driver_ratings
     add constraint driver_ratings_unique
     unique (driver_id, race_id, user_id);
@@ -152,3 +147,148 @@ alter table driver_ratings
 alter table race_ratings 
     add constraint race_ratings_unique
     unique (race_id, user_id);
+
+
+
+CREATE OR REPLACE FUNCTION check_comment_limit()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (
+    SELECT COUNT(*) FROM public.driver_comments
+    WHERE driver_id = NEW.driver_id
+      AND user_id = NEW.user_id
+      AND type = NEW.type
+  ) >= 3 THEN
+    RAISE EXCEPTION 'Maximum of 3 % comments per driver per user', NEW.type;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql
+    set search_path = '';
+
+
+CREATE TRIGGER enforce_comment_limit
+BEFORE INSERT ON driver_comments
+FOR EACH ROW EXECUTE FUNCTION check_comment_limit();
+
+
+
+create or replace view driver_stats
+with (security_invoker = true)
+as
+select
+    dr.driver_id,
+
+    -- Season average
+    round(avg(dr.rating)::numeric, 1) as avg_rating_season,
+
+    -- Last 5 non-cancelled races
+    round(
+        avg(dr.rating) filter (
+            where dr.race_id in (
+                select r.id
+                from races r
+                where r.date_end < now()
+                  and coalesce(r.is_cancelled, false) = false
+                order by r.date_end desc
+                limit 5
+            )
+        )::numeric,
+        1
+    ) as avg_rating_last_5,
+
+    -- Last 3 non-cancelled races
+    round(
+        avg(dr.rating) filter (
+            where dr.race_id in (
+                select r.id
+                from races r
+                where r.date_end < now()
+                  and coalesce(r.is_cancelled, false) = false
+                order by r.date_end desc
+                limit 3
+            )
+        )::numeric,
+        1
+    ) as avg_rating_last_3,
+
+    -- Best round average
+    round((
+        select avg(inner_dr.rating)
+        from driver_ratings inner_dr
+        where inner_dr.driver_id = dr.driver_id
+        group by inner_dr.race_id
+        order by avg(inner_dr.rating) desc
+        limit 1
+    )::numeric, 1) as avg_rating_best_round,
+
+    -- Comment counts
+    count(distinct dc.id) as total_comments,
+
+    count(distinct dc.id) filter (
+        where dc.type = 'positive'
+    ) as positive_comments,
+
+    count(distinct dc.id) filter (
+        where dc.type = 'negative'
+    ) as negative_comments,
+
+    -- Current user's comment count
+    count(distinct dc.id) filter (
+        where dc.user_id = auth.uid()
+    ) as my_comments
+
+from driver_ratings dr
+left join driver_comments dc
+    on dc.driver_id = dr.driver_id
+
+group by dr.driver_id;
+
+-- Revoke from anon and authenticated, grant only to authenticated
+revoke select on public.driver_stats from anon;
+revoke select on public.driver_stats from authenticated;
+grant select on public.driver_stats to authenticated;
+
+
+
+create or replace view race_rating_stats
+with (security_invoker = true)
+as
+select
+    rr.race_id,
+
+    r.round,
+    r.race_name,
+    r.race_location,
+    r.country_name,
+    r.date_start,
+    r.date_end,
+    r.is_cancelled,
+
+    round(avg(rr.rating)::numeric, 1) as avg_rating,
+
+    count(rr.id) as total_ratings
+
+from race_ratings rr
+
+join races r
+    on r.id = rr.race_id
+
+where r.is_cancelled = false
+
+group by
+    rr.race_id,
+    r.round,
+    r.race_name,
+    r.race_location,
+    r.country_name,
+    r.date_start,
+    r.date_end,
+    r.is_cancelled;
+
+    -- Remove public access
+revoke select on public.race_rating_stats from anon;
+revoke select on public.race_rating_stats from authenticated;
+
+-- Allow only signed-in users
+grant select on public.race_rating_stats to authenticated;
