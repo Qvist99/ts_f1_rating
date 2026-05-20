@@ -7,8 +7,8 @@ import { shuffleArray } from "@/lib/utils";
 export default function FanCommentsCard({ driver }: { driver: DriverWithRatingAndComments }) {
     const commentsPerSlide = 3;
 
-    const positiveComments = driver.driver_comments.map(comment => comment.positive_comment).flat();
-    const negativeComments = driver.driver_comments.map(comment => comment.negative_comment).flat();
+    const positiveComments = driver.driver_comments.filter(comment => comment.type === "positive");
+    const negativeComments = driver.driver_comments.filter(comment => comment.type === "negative");
 
     // randomize the comments into a new array so we can show different comments each time
     const tagged = [
@@ -36,7 +36,7 @@ export default function FanCommentsCard({ driver }: { driver: DriverWithRatingAn
                     pages={slidePages.map((comments, index) => (
                         <div key={index} className="flex flex-col gap-2 ">
                             {comments.map((c, idx) => (
-                                <Comment key={idx} comment={c.comment} type={c.type} />
+                                <Comment key={idx} comment={c.comment.text} type={c.type} />
                             ))}
                         </div>
                     ))} action={{ label: "Have Your Say", href: `/dashboard/user-comments` }}
