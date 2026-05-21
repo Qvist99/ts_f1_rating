@@ -118,10 +118,10 @@ export type Database = {
           first_name: string
           headshot_url: string
           id: string
-          is_retired: boolean
           last_name: string
           team_color: string
           team_name: string
+          year: number
         }
         Insert: {
           acronym: string
@@ -129,10 +129,10 @@ export type Database = {
           first_name: string
           headshot_url: string
           id?: string
-          is_retired?: boolean
           last_name: string
           team_color: string
           team_name: string
+          year: number
         }
         Update: {
           acronym?: string
@@ -140,12 +140,42 @@ export type Database = {
           first_name?: string
           headshot_url?: string
           id?: string
-          is_retired?: boolean
           last_name?: string
           team_color?: string
           team_name?: string
+          year?: number
         }
         Relationships: []
+      }
+      race_drivers: {
+        Row: {
+          driver_id: string
+          race_id: string
+        }
+        Insert: {
+          driver_id: string
+          race_id: string
+        }
+        Update: {
+          driver_id?: string
+          race_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "race_drivers_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "race_drivers_race_id_fkey"
+            columns: ["race_id"]
+            isOneToOne: false
+            referencedRelation: "races"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       race_ratings: {
         Row: {
