@@ -157,6 +157,13 @@ on driver_comments for delete
 to authenticated
 using ((select auth.uid()) = user_id);
 
+-- race_drivers: read all if logged in, no one can write via client
+create policy "Authenticated users can read race_drivers"
+on race_drivers for select
+to authenticated
+using (true);
+
+
 
 CREATE OR REPLACE FUNCTION check_comment_limit()
 RETURNS TRIGGER AS $$
@@ -187,10 +194,10 @@ as
 select
     dr.driver_id,
 
-    -- Season average
+    -- Season average (current year only)
     round(avg(dr.rating)::numeric, 1) as avg_rating_season,
 
-    -- Last 5 non-cancelled races
+    -- Last 5 non-cancelled races (current year only)
     round(
         avg(dr.rating) filter (
             where dr.race_id in (
@@ -198,6 +205,7 @@ select
                 from races r
                 where r.date_end < now()
                   and coalesce(r.is_cancelled, false) = false
+                  and date_part('year', r.date_start) = date_part('year', now())
                 order by r.date_end desc
                 limit 5
             )
@@ -205,7 +213,7 @@ select
         1
     ) as avg_rating_last_5,
 
-    -- Last 3 non-cancelled races
+    -- Last 3 non-cancelled races (current year only)
     round(
         avg(dr.rating) filter (
             where dr.race_id in (
@@ -213,6 +221,7 @@ select
                 from races r
                 where r.date_end < now()
                   and coalesce(r.is_cancelled, false) = false
+                  and date_part('year', r.date_start) = date_part('year', now())
                 order by r.date_end desc
                 limit 3
             )
@@ -220,11 +229,13 @@ select
         1
     ) as avg_rating_last_3,
 
-    -- Best round average
+    -- Best round average (current year only)
     round((
         select avg(inner_dr.rating)
         from driver_ratings inner_dr
+        join races r on r.id = inner_dr.race_id
         where inner_dr.driver_id = dr.driver_id
+          and date_part('year', r.date_start) = date_part('year', now())
         group by inner_dr.race_id
         order by avg(inner_dr.rating) desc
         limit 1
@@ -247,10 +258,17 @@ select
     ) as my_comments
 
 from driver_ratings dr
+join drivers d
+    on d.id = dr.driver_id
+    and d.year = date_part('year', now())
+join races r
+    on r.id = dr.race_id
+    and date_part('year', r.date_start) = date_part('year', now())
 left join driver_comments dc
     on dc.driver_id = dr.driver_id
 
 group by dr.driver_id;
+
 
 -- Revoke from anon and authenticated, grant only to authenticated
 revoke select on public.driver_stats from anon;
@@ -283,6 +301,7 @@ join races r
     on r.id = rr.race_id
 
 where r.is_cancelled = false
+  and date_part('year', r.date_start) = date_part('year', now())
 
 group by
     rr.race_id,

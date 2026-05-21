@@ -23,21 +23,25 @@ export default async function page({ params }: { params: Promise<{ raceId: strin
             .eq("race_ratings.user_id", user.id)
             .single(),
         supabase
-            .from("drivers")
-            .select(`*, driver_ratings!left(*)`)
-            .eq("driver_ratings.race_id", raceId)
-            .eq("driver_ratings.user_id", user.id)
+            .from("race_drivers")
+            .select(`drivers(*, driver_ratings!left(*))`)
+            .eq("race_id", raceId)
+            .eq("drivers.driver_ratings.race_id", raceId)
+            .eq("drivers.driver_ratings.user_id", user.id)
     ])
 
     if (raceError || driversError) {
+        console.error("Error fetching data:", raceError || driversError);
         // handle errors, maybe show an error message or redirect
         return <div></div>
     }
 
+    const drivers = driversData.map(rd => rd.drivers) ?? []
+
     return (
         <RatingStoreProvider>
             <Header raceWithRatings={raceData} />
-            <DriverGrid drivers={driversData} race={raceData} />
+            <DriverGrid drivers={drivers} race={raceData} />
 
         </RatingStoreProvider>
     )
