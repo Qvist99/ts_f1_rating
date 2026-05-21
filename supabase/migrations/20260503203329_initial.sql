@@ -1,6 +1,5 @@
 CREATE TYPE comment_type AS ENUM ('positive', 'negative');
 
-
 CREATE table drivers (
     "id" uuid primary key default gen_random_uuid(),
     "driver_number" integer not null,
@@ -319,3 +318,6 @@ revoke select on public.race_rating_stats from authenticated;
 
 -- Allow only signed-in users
 grant select on public.race_rating_stats to authenticated;
+
+create extension if not exists pg_net;
+create extension if not exists pg_cron;
