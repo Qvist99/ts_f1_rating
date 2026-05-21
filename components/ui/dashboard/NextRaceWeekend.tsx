@@ -26,7 +26,11 @@ export default async function NextRaceWeekend() {
         return null;
     }
 
-    const isRaceWeekStarted = new Date(raceData.date_start) <= new Date();
+    const sessions = raceData.sessions || [];
+
+    const raceSession = sessions.find(session => session.session_name === "Race")
+
+    const raceSessionStarted = raceSession ? new Date(raceSession.date_start) <= new Date() : false;
 
     const startDate = new Date(raceData.date_start).toLocaleDateString("en-US", { month: "short", day: "numeric" });
     const endDate = new Date(raceData.date_end).toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -67,7 +71,7 @@ export default async function NextRaceWeekend() {
             <div className="flex justify-between items-center mt-4 h-full w-full">
                 <p className="text-text-muted font-bold">{dateDisplay}</p>
 
-                {isRaceWeekStarted ? (
+                {raceSessionStarted ? (
 
                     <Link
                         href={`dashboard/rate/${raceData.id}`}
@@ -78,7 +82,7 @@ export default async function NextRaceWeekend() {
                         Rate Drivers
                     </Link>
                 ) : (
-                    <span title="Will be made available when FP1 starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md cursor-not-allowed font-condensed font-bold">
+                    <span title="Will be made available when the main race starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md cursor-not-allowed font-condensed font-bold">
                         <Star size={16} />
                         Rate Drivers
                     </span>

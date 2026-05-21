@@ -10,6 +10,7 @@ import { DriverStandingFromApi, ConstructorStandingFromApi } from "@/lib/types";
 export default async function SeasonOverviewPanel() {
     const supabase = await createClient();
 
+    const currentYear = new Date().getFullYear()
     const currentDate = new Date().toISOString()
 
 
@@ -21,9 +22,15 @@ export default async function SeasonOverviewPanel() {
         .order("date_end", { ascending: false })
         .limit(5)
 
-    const driversWithStatsPromise = supabase.from("drivers").select("*, driver_stats(*)")
+    const driversWithStatsPromise = supabase
+        .from("drivers")
+        .select("*, driver_stats(*)")
+        .eq("year", currentYear);
 
-    const raceRatingStatsPromise = supabase.from("race_rating_stats").select("*")
+    // need to watch the db function for this one that we only get race ratings for this year otherwise we might get ratings from previous years in the list
+    const raceRatingStatsPromise = supabase
+        .from("race_rating_stats")
+        .select("*");
 
     const driverStandingsPromise = fetch("https://api.openf1.org/v1/championship_drivers?session_key=latest&meeting_key=latest", {
         next: {

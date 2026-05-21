@@ -82,10 +82,10 @@ function BottomBar({ sessions }: { sessions: RaceWithRatings["sessions"] }) {
             <div>
                 <div className="flex">
                     <div className="text-xs px-3 py-1 border border-border rounded-l text-text-muted border-r-0">
-                        Opens at FP1
+                        Opens at Race
                     </div>
                     <div className="text-xs px-3 py-1 border border-red-800/40 bg-red-950/30 text-red-400">
-                        Race weekend
+                        Race
                     </div>
                     <div className="text-xs px-3 py-1 border border-border rounded-r text-text-muted border-l-0">
                         +2 days post-race

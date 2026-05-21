@@ -4,9 +4,14 @@ import DriverCard from "../DriverCard";
 import FanCommentsCard from "../FanCommentsCard";
 export default async function UsersDriverOpinions() {
     const supabase = await createClient();
+    const currentYear = new Date().getFullYear()
 
 
-    const { data: drivers, error: driversError } = await supabase.from("drivers").select("*, driver_comments(*), driver_ratings(*, races(race_name, round, date_end))").limit(15, { referencedTable: "driver_comments" })
+    const { data: drivers, error: driversError } = await supabase
+        .from("drivers")
+        .select("*, driver_comments(*), driver_ratings(*, races(race_name, round, date_end))")
+        .eq("year", currentYear)
+        .limit(15, { referencedTable: "driver_comments" })
 
     if (driversError) {
         console.error("Error fetching drivers:", driversError);
