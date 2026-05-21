@@ -1,17 +1,23 @@
+CREATE TYPE comment_type AS ENUM ('positive', 'negative');
+
+
 CREATE table drivers (
     "id" uuid primary key default gen_random_uuid(),
+    "driver_number" integer not null,
+    "year" integer not null,
     "first_name" text not null,
     "last_name" text not null,
     "team_name" text not null,
     "team_color" text not null,
     "acronym" text not null,
-    "driver_number" integer not null,
     "headshot_url" text not null,
-    "is_retired" boolean not null default false
+    CONSTRAINT drivers_number_year_key UNIQUE (driver_number, year)
 );
 
 create table races (
     "id" uuid primary key default gen_random_uuid(),
+    "meeting_key" integer not null UNIQUE,
+    "round" integer not null,
     "circuit_name" text not null,
     "circuit_image_url" text not null,
     "country_flag_url" text not null,
@@ -22,29 +28,40 @@ create table races (
     "race_name" text not null,
     "race_location" text not null,
     "race_official_name" text not null,
-    "sessions" jsonb not null,
-    "meeting_key" integer not null,
-    "round" integer not null
+    "sessions" jsonb not null
 );
+
+CREATE TABLE race_drivers (
+    "race_id"   uuid NOT NULL REFERENCES races(id)   ON DELETE CASCADE,
+    "driver_id" uuid NOT NULL REFERENCES drivers(id) ON DELETE CASCADE,
+    PRIMARY KEY (race_id, driver_id)
+);
+ 
+CREATE INDEX race_drivers_race_id_idx   ON race_drivers(race_id);
+CREATE INDEX race_drivers_driver_id_idx ON race_drivers(driver_id);
+
+
+
 
 create table driver_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "driver_id" uuid not null references drivers(id) on delete cascade,
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
+    "meeting_key" integer not null,
     "rating" integer not null,
-    "meeting_key" integer not null
+    CONSTRAINT driver_ratings_unique UNIQUE (driver_id, race_id, user_id)
 );
 
 create table race_ratings (
     "id" uuid primary key default gen_random_uuid(),
     "race_id" uuid not null references races(id) on delete cascade,
     "user_id" uuid not null default auth.uid() references auth.users(id) on delete cascade,
+    "meeting_key" integer not null,
     "rating" integer not null,
-    "meeting_key" integer not null
+    CONSTRAINT race_ratings_unique UNIQUE (race_id, user_id)
 );
 
-create type comment_type as enum ('positive', 'negative');
 
 create table driver_comments (
     "id" uuid primary key default gen_random_uuid(),
@@ -58,6 +75,7 @@ create table driver_comments (
 -- RLS
 alter table drivers enable row level security;
 alter table races enable row level security;
+alter table race_drivers enable row level security;
 alter table driver_ratings enable row level security;
 alter table race_ratings enable row level security;
 alter table driver_comments enable row level security;
@@ -138,16 +156,6 @@ create policy "Users can delete their own driver comments"
 on driver_comments for delete
 to authenticated
 using ((select auth.uid()) = user_id);
-
-alter table driver_ratings
-    add constraint driver_ratings_unique
-    unique (driver_id, race_id, user_id);
-
-
-alter table race_ratings 
-    add constraint race_ratings_unique
-    unique (race_id, user_id);
-
 
 
 CREATE OR REPLACE FUNCTION check_comment_limit()
