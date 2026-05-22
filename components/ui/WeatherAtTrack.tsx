@@ -1,7 +1,6 @@
 import { WeatherDataFromApi } from "@/lib/types"
 import { RaceSession } from "@/lib/types"
 import { getNextSession } from "@/lib/races/getNextSession"
-import { weatherConfig } from "@/lib/weather"
 import { CloudOff } from "lucide-react"
 
 
@@ -26,15 +25,12 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
 
     if (!res.ok) {
         if (res.status !== 404) {
-            console.error("Failed to fetch weather data:", res.statusText)
+
+            return <WeatherNotAvailable />
         }
 
-        return (
-            <div className={`${sharedCss} justify-center items-center text-center`}>
-                <CloudOff size={32} className=" mb-2" />
-                <p className="text-sm text-text-muted">Weather data will be available closer to the session start time.</p>
-            </div>
-        )
+        return <WeatherNotAvailable />
+
     }
 
     const weatherDataArray: WeatherDataFromApi[] = await res.json()
@@ -83,4 +79,14 @@ function getWindDirection(degree: number) {
     const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
     const index = Math.round(degree / 45) % 8;
     return directions[index];
+}
+
+
+function WeatherNotAvailable() {
+    return (
+        <div className="flex flex-col w-full pl-3.5 pr-0 justify-center items-center text-center">
+            <CloudOff size={32} className=" mb-2" />
+            <p className="text-sm text-text-muted">Weather data will be available closer to the session start time.</p>
+        </div>
+    )
 }
