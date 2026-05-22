@@ -16,11 +16,12 @@ export interface StandingsListProps {
     showRatingBar: boolean;
     showDelta: boolean;
     alwaysShowDecimal?: boolean;
+    emptyStateText?: string;
 }
 
 
 
-export default function StandingsList({ items, valueSuffix, showRatingBar, showDelta, alwaysShowDecimal = false }: StandingsListProps) {
+export default function StandingsList({ items, valueSuffix, showRatingBar, showDelta, alwaysShowDecimal = false, emptyStateText = "No ratings yet" }: StandingsListProps) {
     // ▲  ▼ — 
 
     return (
@@ -79,7 +80,7 @@ export default function StandingsList({ items, valueSuffix, showRatingBar, showD
             })}
             {items.length === 0 && (
                 <div className="py-4 text-center text-text-muted">
-                    No ratings yet
+                    {emptyStateText}
                 </div>
             )}
         </div>

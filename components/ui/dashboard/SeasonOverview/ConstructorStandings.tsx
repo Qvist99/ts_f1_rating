@@ -37,6 +37,6 @@ export default function ConstructorStandings({ constructorStandingsPromise, driv
 
 
     return (
-        <StandingsList items={standingsListItems} valueSuffix="pts" showRatingBar={false} showDelta={true} />
+        <StandingsList items={standingsListItems} valueSuffix="pts" showRatingBar={false} showDelta={true} emptyStateText="No constructor standings available" />
     )
 }

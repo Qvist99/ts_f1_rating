@@ -36,13 +36,19 @@ export default async function SeasonOverviewPanel() {
         next: {
             revalidate: 1800
         }
-    }).then(res => res.json()) as Promise<DriverStandingFromApi[]>
+    }).then(res => {
+        if (!res.ok) return []
+        return res.json()
+    }).catch(() => []) as Promise<DriverStandingFromApi[]>
 
     const constructorStandingsPromise = fetch("https://api.openf1.org/v1/championship_teams?session_key=latest&meeting_key=latest", {
         next: {
             revalidate: 1800
         }
-    }).then(res => res.json()) as Promise<ConstructorStandingFromApi[]>
+    }).then(res => {
+        if (!res.ok) return []
+        return res.json()
+    }).catch(() => []) as Promise<ConstructorStandingFromApi[]>
 
     return (
         <div className="h-full overflow-hidden">
