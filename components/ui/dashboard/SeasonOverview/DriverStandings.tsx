@@ -13,6 +13,9 @@ export default function DriverStandings({ driverStandingsPromise, driversWithSta
     const driverStandings = use(driverStandingsPromise)
     const { data: driversWithStats, error } = use(driversWithStatsPromise)
 
+
+
+
     if (error) {
         console.log(error)
         return <div></div>
@@ -33,6 +36,6 @@ export default function DriverStandings({ driverStandingsPromise, driversWithSta
 
 
     return (
-        <StandingsList items={standingsListItems} valueSuffix="pts" showRatingBar={false} showDelta={true} />
+        <StandingsList items={standingsListItems} valueSuffix="pts" showRatingBar={false} showDelta={true} emptyStateText="No driver standings available" />
     )
 }
