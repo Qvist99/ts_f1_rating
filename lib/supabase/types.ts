@@ -34,6 +34,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      constructor_standings: {
+        Row: {
+          id: string
+          standings: Json
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          id?: string
+          standings: Json
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          id?: string
+          standings?: Json
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
       driver_comments: {
         Row: {
           driver_id: string
@@ -110,6 +131,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      driver_standings: {
+        Row: {
+          id: string
+          standings: Json
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          id?: string
+          standings: Json
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          id?: string
+          standings?: Json
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
       }
       drivers: {
         Row: {
