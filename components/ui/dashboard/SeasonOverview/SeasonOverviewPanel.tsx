@@ -4,8 +4,6 @@ import DriverStandings from "./DriverStandings";
 import ConstructorStandings from "./ConstructorStandings";
 import DriverRatings from "./DriverRatings";
 import RaceRatings from "./RaceRatings";
-import { DriverStandingFromApi, ConstructorStandingFromApi } from "@/lib/types";
-
 
 export default async function SeasonOverviewPanel() {
     const supabase = await createClient();
@@ -27,28 +25,23 @@ export default async function SeasonOverviewPanel() {
         .select("*, driver_stats(*)")
         .eq("year", currentYear);
 
-    // need to watch the db function for this one that we only get race ratings for this year otherwise we might get ratings from previous years in the list
+
     const raceRatingStatsPromise = supabase
         .from("race_rating_stats")
         .select("*");
 
-    const driverStandingsPromise = fetch("https://api.openf1.org/v1/championship_drivers?session_key=latest&meeting_key=latest", {
-        next: {
-            revalidate: 1800
-        }
-    }).then(res => {
-        if (!res.ok) return []
-        return res.json()
-    }).catch(() => []) as Promise<DriverStandingFromApi[]>
 
-    const constructorStandingsPromise = fetch("https://api.openf1.org/v1/championship_teams?session_key=latest&meeting_key=latest", {
-        next: {
-            revalidate: 1800
-        }
-    }).then(res => {
-        if (!res.ok) return []
-        return res.json()
-    }).catch(() => []) as Promise<ConstructorStandingFromApi[]>
+    const driverStandingsPromise = supabase
+        .from("driver_standings")
+        .select("standings")
+        .eq("year", currentYear)
+        .maybeSingle();
+
+    const constructorStandingsPromise = supabase
+        .from("constructor_standings")
+        .select("standings")
+        .eq("year", currentYear)
+        .maybeSingle();
 
     return (
         <div className="h-full overflow-hidden">

@@ -19,6 +19,12 @@ export type DriverStats = Database["public"]["Views"]["driver_stats"]["Row"];
 export type RaceRatingStats =
     Database["public"]["Views"]["race_rating_stats"]["Row"];
 
+export type DriverStanding =
+    Database["public"]["Tables"]["driver_standings"]["Row"];
+
+export type ConstructorStanding =
+    Database["public"]["Tables"]["constructor_standings"]["Row"];
+
 export type RaceSession = {
     date_end: string;
     date_start: string;
@@ -96,6 +102,22 @@ export type RacesWithRatingsPromise = PromiseLike<
 
 export type RaceWithRatingsPromise = PromiseLike<
     PostgrestSingleResponse<RaceWithRatings>
+>;
+
+export type DriverStandingsPromise = PromiseLike<
+    PostgrestSingleResponse<
+        {
+            standings: DriverStandingFromApi[];
+        } | null
+    >
+>;
+
+export type ConstructorStandingsPromise = PromiseLike<
+    PostgrestSingleResponse<
+        {
+            standings: ConstructorStandingFromApi[];
+        } | null
+    >
 >;
 
 export interface Comment {
