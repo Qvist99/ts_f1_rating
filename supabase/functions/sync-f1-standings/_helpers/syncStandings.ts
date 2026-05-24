@@ -1,4 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import {
+  isConstructorStandingsComplete,
+  isDriverStandingsComplete,
+} from "./utils.ts";
 
 export default async function syncStandings(
   supabase: SupabaseClient,
@@ -122,6 +126,16 @@ export default async function syncStandings(
     driverStandingsResponse.json(),
     constructorStandingsResponse.json(),
   ]);
+
+  if (!isDriverStandingsComplete(driverStandingsData)) {
+    console.error("Driver standings data is incomplete, skipping...");
+    return;
+  }
+
+  if (!isConstructorStandingsComplete(constructorStandingsData)) {
+    console.error("Constructor standings data is incomplete, skipping...");
+    return;
+  }
 
   const updatedAt = new Date().toISOString();
 
