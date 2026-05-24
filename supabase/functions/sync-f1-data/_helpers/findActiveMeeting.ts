@@ -1,4 +1,4 @@
-interface Session {
+export interface Session {
   session_key: number;
   session_name: string;
   session_type: string;
@@ -7,7 +7,7 @@ interface Session {
   is_cancelled: boolean;
 }
 
-interface Race {
+export interface Race {
   meeting_key: number;
   sessions: Session[];
 }
