@@ -10,6 +10,8 @@ export default function Slider({ pages, autoRotateMs, action }: {
     const [current, setCurrent] = useState(0)
 
     useEffect(() => {
+        setCurrent(0)
+
         if (!autoRotateMs) return;
         const interval = setInterval(() => {
             setCurrent(i => (i + 1) % pages.length)
