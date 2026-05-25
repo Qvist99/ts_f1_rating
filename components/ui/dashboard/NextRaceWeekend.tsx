@@ -41,7 +41,7 @@ export default async function NextRaceWeekend() {
             <div className="flex justify-between mb-3">
                 <div className="flex gap-4 items-center justify-center">
                     {/* Find svgs for the countries and map them instead as the images from the api are suboptimal */}
-                    <div className="w-[40px] h-[40px] rounded-full overflow-hidden relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden relative">
                         <Image src={raceData.country_flag_url} alt={raceData.country_name} fill className="object-cover" />
                     </div>
 

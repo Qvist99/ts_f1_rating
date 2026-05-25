@@ -55,7 +55,7 @@ function BottomBar({ sessions }: { sessions: RaceWithRatings["sessions"] }) {
 
     // rating closes 2 days after last session ends
     // Format as "May 26 23:59" as example
-    const ratingCloseDate = new Date(lastSessionOfWeekend.date_end)
+    const ratingCloseDate = new Date(new Date(lastSessionOfWeekend.date_end).getTime() + 2 * 24 * 60 * 60 * 1000)
 
     const formatedCloseDate = ratingCloseDate.toLocaleString("en-US", {
         month: "short",
