@@ -2,6 +2,8 @@ import { RatingStoreProvider } from "@/components/providers/RatingsProvider"
 import Header from "@/components/ui/rate/Header"
 import DriverGrid from "@/components/ui/rate/DriverGrid"
 import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+
 
 
 export default async function page({ params }: { params: Promise<{ raceId: string }> }) {
@@ -34,6 +36,16 @@ export default async function page({ params }: { params: Promise<{ raceId: strin
         console.error("Error fetching data:", raceError || driversError);
         // handle errors, maybe show an error message or redirect
         return <div></div>
+    }
+
+    const ratingDeadline = new Date(raceData.date_end)
+    ratingDeadline.setDate(ratingDeadline.getDate() + 2)
+
+    // in the future we might show what ratings the user made for that week but for now we just redirect as we dont have UI for that
+    const now = new Date()
+    if (now > ratingDeadline) {
+        console.log("Rating deadline has passed, redirecting to dashboard.")
+        redirect("/dashboard")
     }
 
     const drivers = driversData.map(rd => rd.drivers) ?? []
