@@ -73,11 +73,9 @@ export type ConstructorStandingFromApi = {
     points_current: number;
 };
 
-export type DriverWithCommentsAndRatings = Drivers & {
+export type DriverWithCommentsAndStats = Drivers & {
     driver_comments: DriverComments[];
-    driver_ratings: (DriverRatings & {
-        races: Pick<Races, "race_name" | "round" | "date_end"> | null;
-    })[];
+    driver_stats: DriverStats;
 };
 
 export type DriverWithRatings = Drivers & {

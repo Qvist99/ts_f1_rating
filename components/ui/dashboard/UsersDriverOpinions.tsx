@@ -6,10 +6,9 @@ export default async function UsersDriverOpinions() {
     const supabase = await createClient();
     const currentYear = new Date().getFullYear()
 
-
     const { data: drivers, error: driversError } = await supabase
         .from("drivers")
-        .select("*, driver_comments(*), driver_ratings(*, races(race_name, round, date_end))")
+        .select("*, driver_comments(*)")
         .eq("year", currentYear)
         .limit(15, { referencedTable: "driver_comments" })
 
@@ -18,13 +17,29 @@ export default async function UsersDriverOpinions() {
         return <div>Error loading driver opinions.</div>;
     }
 
+    const { data: driverStats, error: driverStatsError } = await supabase
+        .from("driver_stats")
+        .select("*")
+
+    if (driverStatsError) {
+        console.error("Error fetching driver stats:", driverStatsError);
+        return <div>Error loading driver opinions.</div>;
+    }
+
 
     const fiveRandomDrivers = drivers.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+
+    const fiveRandomDriversWithStats = fiveRandomDrivers.map(driver => {
+        const stats = driverStats.find(stat => stat.driver_id === driver.id)!;
+        return { ...driver, driver_stats: stats };
+    });
+
 
     return (
 
         <Slider
-            pages={fiveRandomDrivers.map(driver => (
+            pages={fiveRandomDriversWithStats.map(driver => (
                 <div className="h-full flex gap-2">
                     <div className="bg-card-bg border-2 border-card-border h-full w-[50%] rounded ">
                         <DriverCard driver={driver} />
