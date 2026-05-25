@@ -24,9 +24,9 @@ export default function DriversList({ drivers }: DriversListProps) {
             )
             .sort((a, b) => {
                 if (sort === "avg_rating") {
-                    return (b.driver_stats[0]?.avg_rating_season ?? 0) - (a.driver_stats[0]?.avg_rating_season ?? 0)
+                    return (b.driver_stats.avg_rating_season ?? 0) - (a.driver_stats.avg_rating_season ?? 0)
                 }
-                return (b.driver_stats[0]?.total_comments ?? 0) - (a.driver_stats[0]?.total_comments ?? 0)
+                return (b.driver_stats.total_comments ?? 0) - (a.driver_stats.total_comments ?? 0)
             })
     }, [drivers, search, sort])
 

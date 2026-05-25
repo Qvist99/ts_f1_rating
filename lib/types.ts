@@ -127,7 +127,7 @@ export interface Comment {
 }
 
 export type DriverWithStats = Drivers & {
-    driver_stats: DriverStats[];
+    driver_stats: DriverStats;
 };
 
 export type DriversWithStatsPromise = PromiseLike<

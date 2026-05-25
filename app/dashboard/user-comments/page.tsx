@@ -8,7 +8,7 @@ export default async function page() {
 
     const { data: drivers, error: driversError } = await supabase
         .from("drivers")
-        .select("*, driver_stats(*)")
+        .select("*")
         .eq("year", currentYear)
 
     if (driversError) {
@@ -16,11 +16,28 @@ export default async function page() {
         return <div>Error loading drivers</div>;
     }
 
+    const { data: driverStats, error: driverStatsError } = await supabase
+        .from("driver_stats")
+        .select("*")
+
+
+    // Better empty state in the future
+    if (driverStatsError) {
+        console.error(driverStatsError);
+        return <div>Error loading driver stats</div>;
+    }
+
+    const driversWithStats = drivers.map(driver => {
+        const stats = driverStats.find(stat => stat.driver_id === driver.id)!;
+        return { ...driver, driver_stats: stats };
+    });
+
+
 
     return (
         <div>
             <Navbar />
-            <DriversList drivers={drivers} />
+            <DriversList drivers={driversWithStats} />
         </div>
     )
 }
