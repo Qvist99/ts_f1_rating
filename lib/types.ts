@@ -73,11 +73,9 @@ export type ConstructorStandingFromApi = {
     points_current: number;
 };
 
-export type DriverWithCommentsAndRatings = Drivers & {
+export type DriverWithCommentsAndStats = Drivers & {
     driver_comments: DriverComments[];
-    driver_ratings: (DriverRatings & {
-        races: Pick<Races, "race_name" | "round" | "date_end"> | null;
-    })[];
+    driver_stats: DriverStats;
 };
 
 export type DriverWithRatings = Drivers & {
@@ -129,12 +127,17 @@ export interface Comment {
 }
 
 export type DriverWithStats = Drivers & {
-    driver_stats: DriverStats[];
+    driver_stats: DriverStats;
 };
 
-export type DriversWithStatsPromise = PromiseLike<
-    PostgrestSingleResponse<DriverWithStats[]>
+export type DriversPromise = PromiseLike<
+    PostgrestSingleResponse<Drivers[]>
 >;
+
+export type DriversStatsPromise = PromiseLike<
+    PostgrestSingleResponse<DriverStats[]>
+>;
+
 export type RaceRatingStatsPromise = PromiseLike<
     PostgrestSingleResponse<RaceRatingStats[]>
 >;

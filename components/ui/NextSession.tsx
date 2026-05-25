@@ -12,13 +12,12 @@ export default function NextSession({ sessions }: { sessions: RaceSession[] }) {
     const isWeekendOver = !nextSession;
     const nextSessionId = nextSession ? nextSession.session_key : null;
 
-
     const sessionDateAndTime = nextSession ? `${new Date(nextSession.date_start).toLocaleDateString("en-US", { month: "short", day: "numeric" })} - ${new Date(nextSession.date_start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "";
 
 
     return (
         <div className="w-full border-r border-card-border -mx-4 px-4 -my-2 py-2">
-            <div className="flex justify-between bg-[#26151A] -mx-4 px-4 -my-2 border-b-2 border-[#411B1C] py-2">
+            <div className="flex justify-between bg-[#26151A] -mx-4 px-4 -my-2 border-b-2 border-[#411B1C] py-2 min-h-15">
                 <div className="flex flex-col justify-center">
                     {isWeekendOver ? (
                         <p className="text-text-muted font-bold text-xs">WEEKEND FINISHED</p>

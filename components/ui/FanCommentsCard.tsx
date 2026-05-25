@@ -1,10 +1,10 @@
 import Slider from "./Slider"
-import { DriverWithCommentsAndRatings } from "@/lib/types"
+import { DriverWithCommentsAndStats } from "@/lib/types"
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { shuffleArray } from "@/lib/utils";
 
 
-export default function FanCommentsCard({ driver }: { driver: DriverWithCommentsAndRatings }) {
+export default function FanCommentsCard({ driver }: { driver: DriverWithCommentsAndStats }) {
     const commentsPerSlide = 3;
 
     const positiveComments = driver.driver_comments.filter(comment => comment.type === "positive");
@@ -54,7 +54,7 @@ function Comment({ comment, type }: { comment: string; type: "positive" | "negat
     const labelHex = type === "positive" ? "#38B950" : "#D62F25";
 
     return (
-        <div className="border-l-4 h-[80px] px-2 py-1" style={{ borderColor: leftBorderHex, backgroundColor: bgHex }} >
+        <div className="border-l-4 h-20 px-2 py-1" style={{ borderColor: leftBorderHex, backgroundColor: bgHex }} >
             <div className="flex gap-2 items-center font-condensed font-bold" style={{ color: labelHex }}>
                 {type === "positive" ?
                     <>
