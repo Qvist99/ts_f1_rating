@@ -12,7 +12,7 @@ export function RatingButtons({
 
     const ratingDisplay = (
         <span
-            className={`text-[28px] font-medium leading-none flex-shrink-0 ${value ? 'text-[#e8eaf2]' : 'text-[#3E4248]'
+            className={`text-[28px] font-medium leading-none shrink-0 ${value ? 'text-text-primary' : 'text-[#3E4248]'
                 }`}
         >
             {value ? (
@@ -37,7 +37,7 @@ export function RatingButtons({
                     className={`py-2 rounded text-[13px] font-medium transition-colors duration-100 cursor-pointer
                         ${value === n
                             ? 'bg-[#e10600] text-white border border-[#e10600]'
-                            : 'bg-[#181c28] border border-[#282D33] text-[#3E4248] hover:text-[#a1a1aa] hover:border-[#3E4248]'
+                            : 'bg-[#181c28] border border-card-border text-[#3E4248] hover:text-[#a1a1aa] hover:border-[#3E4248]'
                         }`}
                 >
                     {n}

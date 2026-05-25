@@ -34,10 +34,10 @@ export default function DriverGridCard({ driver, race, }: { driver: DriverWithRa
             {/* Driver info */}
             <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-1">
-                    <span className="text-[17px] font-medium text-[#e8eaf2]">{driver.first_name} {driver.last_name}</span>
+                    <span className="text-[17px] font-medium text-text-primary">{driver.first_name} {driver.last_name}</span>
                     <span className="text-xs text-[#3E4248]">{driver.team_name}</span>
                 </div>
-                <div className="w-[3px] min-h-[52px] rounded" style={{ background: `#${driver.team_color}` }} />
+                <div className="w-0.75 min-h-13 rounded" style={{ background: `#${driver.team_color}` }} />
             </div>
 
             {/* Rating */}
