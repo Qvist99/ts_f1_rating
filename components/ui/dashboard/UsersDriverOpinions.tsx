@@ -17,18 +17,19 @@ export default async function UsersDriverOpinions() {
         return <div>Error loading driver opinions.</div>;
     }
 
+    const fiveRandomDrivers = drivers.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+    const randomDriverIds = fiveRandomDrivers.map(driver => driver.id);
+
     const { data: driverStats, error: driverStatsError } = await supabase
         .from("driver_stats")
         .select("*")
+        .in("driver_id", randomDriverIds)
 
     if (driverStatsError) {
         console.error("Error fetching driver stats:", driverStatsError);
         return <div>Error loading driver opinions.</div>;
     }
-
-
-    const fiveRandomDrivers = drivers.sort(() => 0.5 - Math.random()).slice(0, 5);
-
 
     const fiveRandomDriversWithStats = fiveRandomDrivers.map(driver => {
         const stats = driverStats.find(stat => stat.driver_id === driver.id)!;
