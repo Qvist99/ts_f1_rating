@@ -39,7 +39,7 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
 
     const supabase = createClient();
 
-    const stats = driver.driver_stats[0] || []
+    const stats = driver.driver_stats || []
     const posComments = comments.filter(c => c.type === "positive");
     const negComments = comments.filter(c => c.type === "negative");
     const myPosComments = myComments.filter(c => c.type === "positive");
@@ -104,7 +104,7 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
 
     return (
         <div className="flex flex-col border-b border-border ">
-            <div className="flex py-2.5 justify-between w-full items-center cursor-pointer h-[85px]" onClick={onToggle}>
+            <div className="flex py-2.5 justify-between w-full items-center cursor-pointer h-21.25" onClick={onToggle}>
                 <div className="flex items-center gap-4">
                     <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
 
@@ -216,24 +216,24 @@ function CommentColumn({ type, comments, count, onAddClick }: {
 }) {
     const isPos = type === "positive"
     return (
-        <div className={`flex flex-col ${isPos ? "border-r border-white/[0.06]" : ""}`}>
-            <div className={`flex items-center gap-2 px-4 py-[11px] border-b border-white/[0.06] text-[11px] font-semibold tracking-widest uppercase bg-[#111115] ${isPos ? "text-[#22c069]" : "text-[#e84040]"}`}>
+        <div className={`flex flex-col ${isPos ? "border-r border-white/6" : ""}`}>
+            <div className={`flex items-center gap-2 px-4 py-2.75 border-b border-white/6 text-[11px] font-semibold tracking-widest uppercase bg-[#111115] ${isPos ? "text-[#22c069]" : "text-[#e84040]"}`}>
                 <div className="flex items-center gap-2">
                     {isPos ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
                     {isPos ? "Positive" : "Negative"}
                 </div>
                 <span className="ml-auto text-sm opacity-70">{count}</span>
             </div>
-            <div className="flex-1 overflow-y-auto max-h-[320px] [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-thumb]:bg-[#3a3835] [&::-webkit-scrollbar-thumb]:rounded-sm [&::-webkit-scrollbar-track]:bg-transparent">
+            <div className="flex-1 overflow-y-auto max-h-80 [&::-webkit-scrollbar]:w-0.75 [&::-webkit-scrollbar-thumb]:bg-[#3a3835] [&::-webkit-scrollbar-thumb]:rounded-sm [&::-webkit-scrollbar-track]:bg-transparent">
                 {comments.length === 0 ? (
                     <div className="p-8 text-xs text-[#3a3835] italic text-center">
                         No {isPos ? "positive" : "negative"} comments yet.<br />Be the first!
                     </div>
                 ) : (
                     comments.map(c => (
-                        <div key={c.id} className={`relative px-4 py-2.5 border-b border-white/[0.06] last:border-0 text-[13px] leading-relaxed ${c.isYou ? "bg-[#191314]" : ""}`}>
+                        <div key={c.id} className={`relative px-4 py-2.5 border-b border-white/6 last:border-0 text-[13px] leading-relaxed ${c.isYou ? "bg-[#191314]" : ""}`}>
                             <div
-                                className="absolute left-0 top-2.5 bottom-2.5 w-[2px] rounded-sm"
+                                className="absolute left-0 top-2.5 bottom-2.5 w-0.5 rounded-sm"
                                 style={{ background: isPos ? "#22c069" : "#e84040", opacity: c.isYou ? 1 : 0.5 }}
                             />
                             <div className="mb-1.5">{c.text}</div>
@@ -248,7 +248,7 @@ function CommentColumn({ type, comments, count, onAddClick }: {
                     ))
                 )}
                 {comments.length === 0 && (
-                    <div className="px-4 py-5 text-xs text-[#3a3835] text-center border-t border-dashed border-white/[0.06]">
+                    <div className="px-4 py-5 text-xs text-[#3a3835] text-center border-t border-dashed border-white/6">
                         <button onClick={onAddClick} className="bg-none border-none cursor-pointer text-[#e8410a] text-xs underline underline-offset-2 hover:text-[#ff6030] transition-colors">
                             Add your take
                         </button>

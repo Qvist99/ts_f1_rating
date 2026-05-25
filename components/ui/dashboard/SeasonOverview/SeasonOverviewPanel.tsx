@@ -20,11 +20,14 @@ export default async function SeasonOverviewPanel() {
         .order("date_end", { ascending: false })
         .limit(5)
 
-    const driversWithStatsPromise = supabase
+    const driversPromise = supabase
         .from("drivers")
-        .select("*, driver_stats(*)")
+        .select("*")
         .eq("year", currentYear);
 
+    const driversStatsPromise = supabase
+        .from("driver_stats")
+        .select("*")
 
     const raceRatingStatsPromise = supabase
         .from("race_rating_stats")
@@ -47,9 +50,9 @@ export default async function SeasonOverviewPanel() {
         <div className="h-full overflow-hidden">
             <Tabs
                 tabs={[
-                    { id: "Drivers", label: "Drivers", content: <DriverStandings driverStandingsPromise={driverStandingsPromise} driversWithStatsPromise={driversWithStatsPromise} /> },
-                    { id: "Constructors", label: "Constructors", content: <ConstructorStandings constructorStandingsPromise={constructorStandingsPromise} driversWithStatsPromise={driversWithStatsPromise} /> },
-                    { id: "Driver Ratings", label: "Driver Ratings", content: <DriverRatings driverWithStatsPromise={driversWithStatsPromise} /> },
+                    { id: "Drivers", label: "Drivers", content: <DriverStandings driverStandingsPromise={driverStandingsPromise} driversPromise={driversPromise} /> },
+                    { id: "Constructors", label: "Constructors", content: <ConstructorStandings constructorStandingsPromise={constructorStandingsPromise} driversPromise={driversPromise} /> },
+                    { id: "Driver Ratings", label: "Driver Ratings", content: <DriverRatings driversPromise={driversPromise} driversStatsPromise={driversStatsPromise} /> },
                     { id: "Race Ratings", label: "Race Ratings", content: <RaceRatings raceRatingStatsPromise={raceRatingStatsPromise} lastFiveRacesPromise={lastFiveRacesPromise} /> },
                 ]}
                 defaultTab="Drivers"

@@ -1,49 +1,67 @@
-'use client'
+"use client";
 
-import { useEffect, useState, useRef } from "react"
-import { useRatingStore } from "@/components/providers/RatingsProvider"
-type BorderState = 'idle' | 'updating' | 'saving' | 'saved' | 'error'
+import { useEffect, useRef, useState } from "react";
+import { useRatingStore } from "@/components/providers/RatingsProvider";
+type BorderState = "idle" | "updating" | "saving" | "saved" | "error";
 
 export function useRating({ initialRating, onSave, type }: {
-    initialRating?: number
-    onSave: (val: number) => Promise<{ error: any }>
-    type: 'driver' | 'race'
+    initialRating?: number;
+    onSave: (val: number) => Promise<{ error: any }>;
+    type: "driver" | "race";
 }) {
-    const incrementPendingCount = useRatingStore(s => s.incrementPendingCount)
-    const decrementPendingCount = useRatingStore(s => s.decrementPendingCount)
-    const incrementRatedDriverCount = useRatingStore(s => s.incrementRatedDriverCount)
+    const incrementPendingCount = useRatingStore((s) =>
+        s.incrementPendingCount
+    );
+    const decrementPendingCount = useRatingStore((s) =>
+        s.decrementPendingCount
+    );
+    const incrementRatedDriverCount = useRatingStore((s) =>
+        s.incrementRatedDriverCount
+    );
 
-    const [localRating, setLocalRating] = useState<number | undefined>(initialRating)
-    const [borderState, setBorderState] = useState<BorderState>('idle')
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+    const [localRating, setLocalRating] = useState<number | undefined>(
+        initialRating,
+    );
+    const [borderState, setBorderState] = useState<BorderState>("idle");
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+        undefined,
+    );
+    const hasRatingRef = useRef(!!initialRating);
+    const hasPendingRef = useRef(false);
 
     const handleRate = (val: number) => {
-        setLocalRating(val)
-        incrementPendingCount()
-        setBorderState('updating')
+        setLocalRating(val);
+        setBorderState("updating");
 
-        clearTimeout(debounceRef.current)
+        if (!hasPendingRef.current) {
+            incrementPendingCount();
+            hasPendingRef.current = true;
+        }
+
+        clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(async () => {
-            setBorderState('saving')
+            setBorderState("saving");
 
             try {
-                const { error } = await onSave(val)
-                if (error) throw error
-                setBorderState('saved')
-                 if (type === 'driver' && !initialRating) {
-                    incrementRatedDriverCount()
+                const { error } = await onSave(val);
+                if (error) throw error;
+                setBorderState("saved");
+                if (type === "driver" && !hasRatingRef.current) {
+                    incrementRatedDriverCount();
+                    hasRatingRef.current = true;
                 }
-                setTimeout(() => setBorderState('idle'), 1800)
+                setTimeout(() => setBorderState("idle"), 1800);
             } catch {
-                setBorderState('error')
-                setLocalRating(initialRating)
+                setBorderState("error");
+                setLocalRating(initialRating);
             } finally {
-                decrementPendingCount()
+                decrementPendingCount();
+                hasPendingRef.current = false;
             }
-        }, 1400)
-    }
+        }, 1400);
+    };
 
-    useEffect(() => () => clearTimeout(debounceRef.current), [])
+    useEffect(() => () => clearTimeout(debounceRef.current), []);
 
-    return { localRating, borderState, handleRate }
+    return { localRating, borderState, handleRate };
 }

@@ -85,6 +85,13 @@ export type Database = {
             foreignKeyName: "driver_comments_driver_id_fkey"
             columns: ["driver_id"]
             isOneToOne: false
+            referencedRelation: "driver_stats"
+            referencedColumns: ["driver_id"]
+          },
+          {
+            foreignKeyName: "driver_comments_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
             referencedRelation: "drivers"
             referencedColumns: ["id"]
           },
@@ -116,6 +123,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "driver_ratings_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "driver_stats"
+            referencedColumns: ["driver_id"]
+          },
           {
             foreignKeyName: "driver_ratings_driver_id_fkey"
             columns: ["driver_id"]
@@ -203,6 +217,13 @@ export type Database = {
           race_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "race_drivers_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "driver_stats"
+            referencedColumns: ["driver_id"]
+          },
           {
             foreignKeyName: "race_drivers_driver_id_fkey"
             columns: ["driver_id"]
@@ -310,21 +331,15 @@ export type Database = {
           avg_rating_last_3: number | null
           avg_rating_last_5: number | null
           avg_rating_season: number | null
+          best_round_race_id: string | null
           driver_id: string | null
           my_comments: number | null
           negative_comments: number | null
           positive_comments: number | null
           total_comments: number | null
+          total_ratings: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "driver_ratings_driver_id_fkey"
-            columns: ["driver_id"]
-            isOneToOne: false
-            referencedRelation: "drivers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       race_rating_stats: {
         Row: {

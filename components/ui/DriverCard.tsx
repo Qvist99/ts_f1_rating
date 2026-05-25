@@ -1,10 +1,26 @@
-import { DriverWithCommentsAndRatings } from "@/lib/types"
+import { DriverWithCommentsAndStats } from "@/lib/types"
 import Image from "next/image"
-import { getDriverRatingStats } from "@/lib/driverRatingStats";
+import { createClient } from "@/lib/supabase/server"
 
 
-export default function DriverCard({ driver }: { driver: DriverWithCommentsAndRatings }) {
-    const averageRating = getDriverRatingStats(driver);
+export default async function DriverCard({ driver }: { driver: DriverWithCommentsAndStats }) {
+    const supabase = await createClient();
+
+    const driverStats = driver.driver_stats;
+
+    const bestAverageRaceId = driverStats.best_round_race_id as string;
+
+    const { data: race, error: raceError } = await supabase
+        .from("races")
+        .select("race_name, round, date_end")
+        .eq("id", bestAverageRaceId)
+        .single();
+
+
+    if (raceError) {
+        console.error(`Error fetching race data for driver ${driver.first_name} ${driver.last_name}:`, raceError);
+    }
+
 
     const currYear = new Date().getFullYear();
 
@@ -30,18 +46,18 @@ export default function DriverCard({ driver }: { driver: DriverWithCommentsAndRa
 
             <div className="mt-2 flex flex-col gap-1">
                 <p className="text-text-muted font-semibold text-sm font-condensed">AVG. RATING - {currYear}</p>
-                <RatingBar rating={averageRating.average} ratingAmount={driver.driver_ratings.length} />
+                <RatingBar rating={driverStats.avg_rating_season || 0} ratingAmount={driverStats.total_ratings || 0} />
             </div>
 
             <Line />
 
             <div className="mt-2">
-                {averageRating.bestRound && (
+                {driverStats.avg_rating_best_round && (
                     <BestRace
-                        raceName={averageRating.bestRound.races?.race_name || ""}
-                        rating={averageRating.bestRound.rating}
-                        round={averageRating.bestRound.races?.round || 0}
-                        date={averageRating.bestRound.races?.date_end || ""}
+                        raceName={race?.race_name || ""}
+                        rating={driverStats.avg_rating_best_round}
+                        round={race?.round || 0}
+                        date={race?.date_end || ""}
                     />
                 )}
             </div>
