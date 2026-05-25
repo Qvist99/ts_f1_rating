@@ -1,5 +1,5 @@
 "use client"
-import { DriversWithStatsPromise } from "@/lib/types"
+import { DriversPromise, DriversStatsPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
 import { useState } from "react"
@@ -15,25 +15,33 @@ const filters: { label: string, value: RatingFilter }[] = [
 ]
 
 interface DriverWithRatingsProps {
-    driverWithStatsPromise: DriversWithStatsPromise,
+    driversPromise: DriversPromise,
+    driversStatsPromise: DriversStatsPromise,
 }
 
 
-export default function DriverRatings({ driverWithStatsPromise }: DriverWithRatingsProps) {
+export default function DriverRatings({ driversPromise, driversStatsPromise }: DriverWithRatingsProps) {
 
     const [typeOfRating, setTypeOfRating] = useState<RatingFilter>("average")
 
-    const { data: driversWithStats, error: driversWithStatsError } = use(driverWithStatsPromise)
+    const { data: drivers, error: driversError } = use(driversPromise)
 
-    if (driversWithStatsError) {
-        console.error("Error fetching driver stats:", driversWithStatsError)
+    if (driversError) {
+        console.error("Error fetching driver stats:", driversError)
+        return <div></div>
+    }
+
+    const { data: driversStats, error: driversStatsError } = use(driversStatsPromise)
+
+    if (driversStatsError) {
+        console.error("Error fetching driver stats:", driversStatsError)
         return <div></div>
     }
 
     // Make sure we only render drivers that have stats.
-    const standingsListItems = driversWithStats
+    const standingsListItems = drivers
         .map((driver) => {
-            const stats = driver.driver_stats?.[0]
+            const stats = driversStats?.find((stat) => stat.driver_id === driver.id)
 
             if (!stats) return null
 

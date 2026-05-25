@@ -1,28 +1,28 @@
 
-import { DriverStandingsPromise, DriversWithStatsPromise } from "@/lib/types"
+import { DriverStandingsPromise, DriversPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
 
 interface DriverStandingsProps {
     driverStandingsPromise: DriverStandingsPromise,
-    driversWithStatsPromise: DriversWithStatsPromise
+    driversPromise: DriversPromise
 }
 
-export default function DriverStandings({ driverStandingsPromise, driversWithStatsPromise }: DriverStandingsProps) {
+export default function DriverStandings({ driverStandingsPromise, driversPromise }: DriverStandingsProps) {
 
     const { data: driverStandings, error: driverStandingsError } = use(driverStandingsPromise)
-    const { data: driversWithStats, error: driversWithStatsError } = use(driversWithStatsPromise)
+    const { data: drivers, error: driversError } = use(driversPromise)
 
 
 
 
-    if (driverStandingsError || driversWithStatsError) {
-        console.log(driverStandingsError || driversWithStatsError)
+    if (driverStandingsError || driversError) {
+        console.log(driverStandingsError || driversError)
         return <div></div>
     }
 
     const standingsListItems = driverStandings?.standings.map((standing) => {
-        const driverInfo = driversWithStats?.find(driver => driver.driver_number === standing.driver_number)
+        const driverInfo = drivers?.find(driver => driver.driver_number === standing.driver_number)
 
         return {
             position: standing.position_current,

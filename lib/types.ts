@@ -130,9 +130,14 @@ export type DriverWithStats = Drivers & {
     driver_stats: DriverStats;
 };
 
-export type DriversWithStatsPromise = PromiseLike<
-    PostgrestSingleResponse<DriverWithStats[]>
+export type DriversPromise = PromiseLike<
+    PostgrestSingleResponse<Drivers[]>
 >;
+
+export type DriversStatsPromise = PromiseLike<
+    PostgrestSingleResponse<DriverStats[]>
+>;
+
 export type RaceRatingStatsPromise = PromiseLike<
     PostgrestSingleResponse<RaceRatingStats[]>
 >;

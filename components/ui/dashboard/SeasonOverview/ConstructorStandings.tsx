@@ -1,27 +1,27 @@
-import { ConstructorStandingsPromise, DriversWithStatsPromise } from "@/lib/types"
+import { ConstructorStandingsPromise, DriversPromise } from "@/lib/types"
 import { use } from "react"
 import StandingsList from "./StandingsList"
 
 
 interface ConstructorStandingsProps {
     constructorStandingsPromise: ConstructorStandingsPromise,
-    driversWithStatsPromise: DriversWithStatsPromise
+    driversPromise: DriversPromise
 }
 
-export default function ConstructorStandings({ constructorStandingsPromise, driversWithStatsPromise }: ConstructorStandingsProps) {
+export default function ConstructorStandings({ constructorStandingsPromise, driversPromise }: ConstructorStandingsProps) {
 
     const { data: constructorStandings, error: constructorStandingsError } = use(constructorStandingsPromise)
-    const { data: driversWithStats, error: driversWithStatsError } = use(driversWithStatsPromise)
+    const { data: drivers, error: driversError } = use(driversPromise)
 
-    if (constructorStandingsError || driversWithStatsError) {
-        console.log(constructorStandingsError || driversWithStatsError)
+    if (constructorStandingsError || driversError) {
+        console.log(constructorStandingsError || driversError)
         return <div></div>
     }
 
 
     const standingsListItems = constructorStandings?.standings.map((standing) => {
         // We need to find first driver with a matching team_name and take the color from the driver.
-        const driverInfo = driversWithStats.find(driver => driver.team_name === standing.team_name)
+        const driverInfo = drivers.find(driver => driver.team_name === standing.team_name)
 
         return {
             position: standing.position_current,
