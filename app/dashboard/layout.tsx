@@ -1,3 +1,4 @@
+import LoginDialog from '@/components/ui/LoginDialog'
 
 export default function ProtectedLayout({
   children,
@@ -7,6 +8,7 @@ export default function ProtectedLayout({
   return (
     <main className="min-h-screen">
       {children}
+      <LoginDialog />
     </main>
   );
 }

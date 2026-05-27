@@ -1,8 +1,16 @@
-"use client"
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import AuthWidget from "@/components/ui/AuthWidget";
 
-export default function Navbar() {
+
+interface NavbarProps {
+    user: {
+        name?: string | null
+        email?: string | null
+    } | null
+}
+
+export default function Navbar({ user }: NavbarProps) {
     const currentYear = new Date().getFullYear()
 
     return (
@@ -16,9 +24,14 @@ export default function Navbar() {
                 <p className="font-condensed text-xl">Fan Comments</p>
             </div>
 
-            <div className="flex gap-4">
-                <div className="px-3 py-1 text-[#7a7870] bg-[#202028] rounded font-condensed text-sm">
-                    {currentYear} SEASON
+            <div className="flex gap-4 items-center">
+                <div className="flex items-center px-3 py-1 text-[#7a7870] bg-[#202028] rounded font-condensed text-sm h-fit">
+                    <span>
+                        {currentYear} SEASON
+                    </span>
+                </div>
+                <div>
+                    <AuthWidget user={user} redirectTo="/dashboard/user-comments" />
                 </div>
             </div>
         </div>

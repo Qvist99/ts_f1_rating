@@ -6,6 +6,14 @@ export default async function page() {
     const supabase = await createClient();
     const currentYear = new Date().getFullYear()
 
+    const { data: { user } } = await supabase.auth.getUser()
+
+    const profile = user ? {
+        id: user.id,
+        name: user.user_metadata?.full_name ?? null,
+        email: user.email ?? null,
+    } : null
+
     const { data: drivers, error: driversError } = await supabase
         .from("drivers")
         .select("*")
@@ -28,7 +36,7 @@ export default async function page() {
     }
 
     const driversWithStats = drivers.map(driver => {
-        const stats = driverStats.find(stat => stat.driver_id === driver.id)!;
+        const stats = driverStats.find(stat => stat.driver_id === driver.id)!; // We know every driver has stats as they are created at the same time, so this is safe to do for now, but should be handled better in the future
         return { ...driver, driver_stats: stats };
     });
 
@@ -36,8 +44,8 @@ export default async function page() {
 
     return (
         <div>
-            <Navbar />
-            <DriversList drivers={driversWithStats} />
+            <Navbar user={profile} />
+            <DriversList drivers={driversWithStats} user={profile} />
         </div>
     )
 }

@@ -5,11 +5,17 @@ import CommentsModal from "./CommentsModal"
 import Image from "next/image";
 import { ArrowUp, ArrowDown, Star, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Comment, DriverWithStats } from "@/lib/types";
+import { useLoginModal } from "@/lib/stores/useLoginModal";
 
 interface DriverCardProps {
     driver: DriverWithStats;
     isExpanded: boolean;
     onToggle: () => void;
+    user?: {
+        id: string;
+        name: string | null;
+        email: string | null;
+    } | null;
 }
 
 const ratingColor = (r: number | null) => {
@@ -30,7 +36,8 @@ const formatTime = (dateStr: string) => {
 }
 
 
-export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardProps) {
+export default function DriverCard({ driver, isExpanded, onToggle, user }: DriverCardProps) {
+    const { open } = useLoginModal()
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [comments, setComments] = useState<Comment[]>([]);
@@ -69,19 +76,31 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
         async function fetchComments() {
             setLoading(true);
 
-            const { data: { user } } = await supabase.auth.getUser();
+            const commentsQuery = user
+                ? supabase
+                    .from("driver_comments")
+                    .select("*")
+                    .eq("driver_id", driver.id)
+                    .neq("user_id", user.id)
+                : supabase
+                    .from("driver_comments")
+                    .select("*")
+                    .eq("driver_id", driver.id);
 
-            if (!user) {
-                //Should probably redirect in future but we have bigger problems if user reached this far without being authenticated so just return for now
-                console.error("User not authenticated");
-                setLoading(false);
-                return;
-            }
+            const myCommentsQuery = user
+                ? supabase
+                    .from("driver_comments")
+                    .select("*")
+                    .eq("driver_id", driver.id)
+                    .eq("user_id", user.id)
+                : Promise.resolve({ data: [], error: null });
 
-            // In this first version fetching all comments should be no issue. Something we have to overlook in the future and add some sort of pagination or lazy loading to the comments. 
-            const [{ data: commentsData, error: commentsError }, { data: myCommentsData, error: myCommentsError }] = await Promise.all([
-                supabase.from("driver_comments").select("*").eq("driver_id", driver.id).neq("user_id", user.id),
-                supabase.from("driver_comments").select("*").eq("driver_id", driver.id).eq("user_id", user.id)
+            const [
+                { data: commentsData, error: commentsError },
+                { data: myCommentsData, error: myCommentsError }
+            ] = await Promise.all([
+                commentsQuery,
+                myCommentsQuery
             ]);
 
             if (commentsError || myCommentsError) {
@@ -90,17 +109,26 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
                 return;
             }
 
-            setComments(commentsData)
-            setMyComments(myCommentsData)
+            setComments(commentsData);
+            setMyComments(myCommentsData);
             setLoading(false);
             setFetched(true);
         }
+
         fetchComments();
 
     }, [isExpanded])
 
 
+    const handleOpenModal = () => {
+        if (!user) {
+            open("/dashboard/user-comments"); // Open the login/signup modal
+            return;
+        }
 
+        setModalOpen(true)
+        return;
+    }
 
     return (
         <div className="flex flex-col border-b border-border ">
@@ -162,7 +190,7 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
                         </div>
                         {/* Current solution during loading, remove when replaced with proper loading state */}
                         <button className="flex gap-1 items-center border border-[#4e4c4c] rounded py-1.5 px-3 cursor-pointer hover:text-[#e8410a] hover:border-[#e8410a] transition-colors loading:cursor-not-allowed loading:text-[#7a7870] loading:border-[#7a7870] disabled:cursor-not-allowed disabled:text-[#7a7870] disabled:border-[#7a7870]"
-                            onClick={() => setModalOpen(true)}
+                            onClick={() => handleOpenModal()}
                             disabled={loading}
                         >
                             <Plus className="w-4 h-4 mt-0.5" />
@@ -181,13 +209,13 @@ export default function DriverCard({ driver, isExpanded, onToggle }: DriverCardP
                                 type="positive"
                                 comments={[...myPosComments.map(c => ({ ...c, isYou: true })), ...posComments.map(c => ({ ...c, isYou: false }))]}
                                 count={posCount}
-                                onAddClick={() => setModalOpen(true)}
+                                onAddClick={() => handleOpenModal()}
                             />
                             <CommentColumn
                                 type="negative"
                                 comments={[...myNegComments.map(c => ({ ...c, isYou: true })), ...negComments.map(c => ({ ...c, isYou: false }))]}
                                 count={negCount}
-                                onAddClick={() => setModalOpen(true)}
+                                onAddClick={() => handleOpenModal()}
                             />
                         </div>
                     )}

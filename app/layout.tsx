@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Barlow, Barlow_Condensed } from "next/font/google";
+import { Barlow, Barlow_Condensed, Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
