@@ -143,3 +143,5 @@ export type DriversStatsPromise = PromiseLike<
 export type RaceRatingStatsPromise = PromiseLike<
     PostgrestSingleResponse<RaceRatingStats[]>
 >;
+
+export type RacesPromise = PromiseLike<PostgrestSingleResponse<Races[]>>;
