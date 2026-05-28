@@ -1,18 +1,24 @@
 import Navbar from "@/components/ui/user-comments/Navbar"
 import DriversList from "@/components/ui/user-comments/DriversList"
 import { createClient } from "@/lib/supabase/server"
-
+import { UserProfile } from "@/lib/types"
 export default async function page() {
     const supabase = await createClient();
     const currentYear = new Date().getFullYear()
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    const profile = user ? {
-        id: user.id,
-        name: user.user_metadata?.full_name ?? null,
-        email: user.email ?? null,
-    } : null
+    let profile: UserProfile | null = null
+
+    if (user) {
+        const { data: profileData, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+
+        if (error) {
+            console.error("Error fetching profile:", error);
+        } else {
+            profile = profileData
+        }
+    }
 
     const { data: drivers, error: driversError } = await supabase
         .from("drivers")

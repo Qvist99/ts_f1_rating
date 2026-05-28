@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import AuthWidget from "@/components/ui/AuthWidget";
+import { UserProfile } from "@/lib/types";
 
 
 interface NavbarProps {
-    user: {
-        name?: string | null
-        email?: string | null
-    } | null
+    user: UserProfile | null
 }
 
 export default function Navbar({ user }: NavbarProps) {

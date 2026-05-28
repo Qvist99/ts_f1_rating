@@ -12,12 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { signInWithGoogle } from "@/app/auth/actions"
 import { User, LogOut } from "lucide-react"
+import { UserProfile } from "@/lib/types"
 
 interface AuthWidgetProps {
-    user: {
-        name?: string | null
-        email?: string | null
-    } | null
+    user: UserProfile | null
     redirectTo?: string
 }
 
@@ -25,8 +23,8 @@ interface AuthWidgetProps {
 export default function AuthWidget({ user, redirectTo = "/dashboard" }: AuthWidgetProps) {
 
     const getFirstTwoLetters =
-        user?.name?.trim()
-            ? user.name.trim().slice(0, 2).toUpperCase()
+        user?.display_name?.trim()
+            ? user.display_name.trim().slice(0, 2).toUpperCase()
             : "GU"
 
     if (!user) {
@@ -51,18 +49,40 @@ export default function AuthWidget({ user, redirectTo = "/dashboard" }: AuthWidg
 
 
     return (
-        <div>
+        <div className="relative">
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <span className="w-7 h-7 rounded-full bg-white/8 border border-white/15 hover:border-white/30 flex items-center justify-center text-xs font-medium text-white/70 transition-colors cursor-pointer">{getFirstTwoLetters}</span>
+                    <span className="w-7 h-7 rounded-full bg-white/8 border border-white/15 hover:border-white/30 flex items-center justify-center text-xs font-medium text-white/70 transition-colors cursor-pointer">
+                        {getFirstTwoLetters}
+                    </span>
+                    {user.deletion_requested_at && (
+                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
+                    )}
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent className="w-fit" align="end">
                     <DropdownMenuLabel className="font-normal">
-                        <p className="text-sm font-bold text-text-primary">{user.name}</p>
+                        <p className="text-sm font-bold text-text-primary">{user.display_name}</p>
                         <p className="text-xs text-white/50">{user.email}</p>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+
+                    {user.deletion_requested_at && (
+                        <>
+                            <div className="flex items-center gap-2 px-2 py-1.5">
+                                <span className="w-1.5 h-1.5 bg-red-500 rounded-full shrink-0" />
+                                <p className="text-[11px] text-red-400/90 leading-relaxed">
+                                    Account scheduled for deletion.{" "}
+                                    <Link href="/dashboard/account" className="underline underline-offset-2">
+                                        Undo
+                                    </Link>
+                                </p>
+                            </div>
+                            <DropdownMenuSeparator />
+                        </>
+                    )}
+
+
                     <DropdownMenuGroup>
                         <DropdownMenuItem className="cursor-pointer">
                             <Link href="/dashboard/account" className="flex gap-2 items-center">

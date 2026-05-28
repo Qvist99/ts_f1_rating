@@ -4,14 +4,11 @@ import { DriverWithStats } from "@/lib/types"
 import FilterBar from "./FilterBar";
 import DriverCard from "./DriverCard";
 import { useState, useMemo } from "react";
+import { UserProfile } from "@/lib/types";
 
 interface DriversListProps {
     drivers: DriverWithStats[];
-    user?: {
-        id: string;
-        name: string | null;
-        email: string | null;
-    } | null;
+    user?: UserProfile | null;
 }
 
 

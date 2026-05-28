@@ -6,16 +6,14 @@ import Image from "next/image";
 import { ArrowUp, ArrowDown, Star, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Comment, DriverWithStats } from "@/lib/types";
 import { useLoginModal } from "@/lib/stores/useLoginModal";
+import { UserProfile } from "@/lib/types";
+
 
 interface DriverCardProps {
     driver: DriverWithStats;
     isExpanded: boolean;
     onToggle: () => void;
-    user?: {
-        id: string;
-        name: string | null;
-        email: string | null;
-    } | null;
+    user?: UserProfile | null;
 }
 
 const ratingColor = (r: number | null) => {
