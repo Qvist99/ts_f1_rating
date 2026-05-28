@@ -25,6 +25,8 @@ export type DriverStanding =
 export type ConstructorStanding =
     Database["public"]["Tables"]["constructor_standings"]["Row"];
 
+export type UserProfile = Database["public"]["Tables"]["profiles"]["Row"];
+
 export type RaceSession = {
     date_end: string;
     date_start: string;
@@ -141,3 +143,5 @@ export type DriversStatsPromise = PromiseLike<
 export type RaceRatingStatsPromise = PromiseLike<
     PostgrestSingleResponse<RaceRatingStats[]>
 >;
+
+export type RacesPromise = PromiseLike<PostgrestSingleResponse<Races[]>>;

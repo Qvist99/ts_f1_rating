@@ -203,6 +203,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          deletion_requested_at: string | null
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          deletion_requested_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          deletion_requested_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       race_drivers: {
         Row: {
           driver_id: string
@@ -339,7 +363,15 @@ export type Database = {
           total_comments: number | null
           total_ratings: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "driver_ratings_race_id_fkey"
+            columns: ["best_round_race_id"]
+            isOneToOne: false
+            referencedRelation: "races"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       race_rating_stats: {
         Row: {

@@ -45,7 +45,7 @@ export default function StandingsList({ items, valueSuffix, showRatingBar, showD
                             <div className="flex gap-3 items-stretch flex-1 min-w-0">
                                 <div className="w-1 rounded self-stretch" style={{ backgroundColor: item.hexColor }} />
 
-                                <div className="flex flex-col justify-center min-h-[36px] flex-1 min-w-0">
+                                <div className="flex flex-col justify-center min-h-[44px] flex-1 min-w-0">
                                     <span className="font-condensed font-bold leading-none">{item.mainLabel}</span>
                                     {item.subLabel && (
                                         <span className="text-text-muted text-sm mt-0.5 leading-none">{item.subLabel}</span>

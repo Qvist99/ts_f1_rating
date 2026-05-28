@@ -4,13 +4,15 @@ import { DriverWithStats } from "@/lib/types"
 import FilterBar from "./FilterBar";
 import DriverCard from "./DriverCard";
 import { useState, useMemo } from "react";
+import { UserProfile } from "@/lib/types";
 
 interface DriversListProps {
     drivers: DriverWithStats[];
+    user?: UserProfile | null;
 }
 
 
-export default function DriversList({ drivers }: DriversListProps) {
+export default function DriversList({ drivers, user }: DriversListProps) {
     const [search, setSearch] = useState("")
     const [sort, setSort] = useState<"avg_rating" | "most_discussed">("avg_rating")
     const [expandedDriverId, setExpandedDriverId] = useState<string | null>(null)
@@ -44,6 +46,7 @@ export default function DriversList({ drivers }: DriversListProps) {
                         driver={driver}
                         isExpanded={expandedDriverId === driver.id}
                         onToggle={() => handleExpand(driver.id)}
+                        user={user}
                     />
                 ))}
             </div>

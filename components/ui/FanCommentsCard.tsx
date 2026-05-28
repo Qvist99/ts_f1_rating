@@ -26,7 +26,7 @@ export default function FanCommentsCard({ driver }: { driver: DriverWithComments
 
 
     return (
-        <div className="py-2 px-4 flex flex-col h-full gap-4">
+        <div className="py-2 px-4 flex flex-col h-full gap-2">
             <div>
                 <p className="text-text-muted font-bold text-lg">Fan Comments</p>
             </div>
@@ -54,7 +54,7 @@ function Comment({ comment, type }: { comment: string; type: "positive" | "negat
     const labelHex = type === "positive" ? "#38B950" : "#D62F25";
 
     return (
-        <div className="border-l-4 h-20 px-2 py-1" style={{ borderColor: leftBorderHex, backgroundColor: bgHex }} >
+        <div className="border-l-4 min-h-20 max-h-27 px-2 py-1" style={{ borderColor: leftBorderHex, backgroundColor: bgHex }} >
             <div className="flex gap-2 items-center font-condensed font-bold" style={{ color: labelHex }}>
                 {type === "positive" ?
                     <>

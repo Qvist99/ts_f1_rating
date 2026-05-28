@@ -14,6 +14,9 @@ export default async function WeatherAtTrack({ sessions, meetingKey }: { session
         sessionKey = nextSession.session_key
     }
 
+    // Since we cant reach the endpoint during sessions for free lets return weather not available for now and implement our own weather solution in the future.
+    return <WeatherNotAvailable />
+
 
     const apiUrl = `https://api.openf1.org/v1/weather?meeting_key=${meetingKey}&session_key=${sessionKey}`
 
