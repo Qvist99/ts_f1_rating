@@ -14,3 +14,5 @@ seed.ts
 
 # Snippets folder as currently generating snippets from supabase sql editor
 /snippets
+
+/seed.sql

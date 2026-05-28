@@ -4,9 +4,13 @@ import NextSession from "../NextSession";
 import WeatherAtTrack from "../WeatherAtTrack";
 import { Star } from "lucide-react";
 import Link from "next/link";
+import GuestRateDriversButton from "./GuestRateDriversButton";
 
 export default async function NextRaceWeekend() {
     const supabase = await createClient();
+
+
+    const { data: { user } } = await supabase.auth.getUser()
 
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
@@ -72,22 +76,23 @@ export default async function NextRaceWeekend() {
                 <p className="text-text-muted font-bold">{dateDisplay}</p>
 
                 {raceSessionStarted ? (
-
-                    <Link
-                        href={`dashboard/rate/${raceData.id}`}
-                        className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors font-condensed font-bold"
-
-                    >
-                        <Star size={16} />
-                        Rate Drivers
-                    </Link>
+                    user ? (
+                        <Link
+                            href={`dashboard/rate/${raceData.id}`}
+                            className="flex gap-2 items-center px-4 py-2 border border-gray-600 hover:border-gray-400 rounded-md text-sm transition-colors font-condensed font-bold"
+                        >
+                            <Star size={16} />
+                            Rate Drivers
+                        </Link>
+                    ) : (
+                        <GuestRateDriversButton />
+                    )
                 ) : (
                     <span title="Will be made available when the main race starts" className="flex gap-2 items-center px-4 py-2 bg-gray-700 text-gray-500 rounded-md cursor-not-allowed font-condensed font-bold">
                         <Star size={16} />
                         Rate Drivers
                     </span>
-                )
-                }
+                )}
             </div>
 
         </div>

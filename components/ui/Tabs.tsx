@@ -10,12 +10,13 @@ interface Tab {
 interface TabsProps {
     tabs: Tab[];
     defaultTab?: string;
+    paddingBottom?: boolean;
 }
 
 
 
 
-export default function Tabs({ tabs, defaultTab }: TabsProps) {
+export default function Tabs({ tabs, defaultTab, paddingBottom = true }: TabsProps) {
     const [activeTab, setActiveTab] = useState(defaultTab ?? tabs[0].id)
 
     return (
@@ -33,7 +34,7 @@ export default function Tabs({ tabs, defaultTab }: TabsProps) {
                 ))}
             </div>
 
-            <div className="h-full overflow-scroll pb-16 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className={`h-full overflow-scroll px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${paddingBottom ? "pb-16" : ""}`}>
                 {tabs.find((tab) => tab.id === activeTab)?.content}
             </div>
 
