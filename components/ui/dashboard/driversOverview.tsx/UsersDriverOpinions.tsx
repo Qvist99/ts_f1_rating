@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
-import Slider from "../Slider";
-import DriverCard from "../DriverCard";
-import FanCommentsCard from "../FanCommentsCard";
+import Slider from "@/components/ui/Slider";
+import DriverCard from "./DriverCard";
+import FanCommentsCard from "./FanCommentsCard";
 export default async function UsersDriverOpinions() {
     const supabase = await createClient();
     const currentYear = new Date().getFullYear()

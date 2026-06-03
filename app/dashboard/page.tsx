@@ -1,6 +1,6 @@
 import SuspenseCard from '@/components/ui/SuspenseCard'
-import NextRaceWeekend from '@/components/ui/dashboard/NextRaceWeekend'
-import UsersDriverOpinions from '@/components/ui/dashboard/UsersDriverOpinions'
+import NextRaceWeekend from '@/components/ui/dashboard/nextRaceWeekend/NextRaceWeekend'
+import UsersDriverOpinions from '@/components/ui/dashboard/driversOverview.tsx/UsersDriverOpinions'
 import SeasonOverviewPanel from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanel'
 import { DashboardNavbar } from '@/components/ui/dashboard/DashboardNavbar'
 import { Suspense } from "react"

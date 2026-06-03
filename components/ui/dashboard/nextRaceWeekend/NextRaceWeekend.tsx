@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image";
-import NextSession from "../NextSession";
-import WeatherAtTrack from "../WeatherAtTrack";
+import NextSession from "./NextSession";
+import WeatherAtTrack from "./WeatherAtTrack";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import GuestRateDriversButton from "./GuestRateDriversButton";
