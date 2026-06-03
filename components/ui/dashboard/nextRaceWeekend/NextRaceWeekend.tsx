@@ -1,29 +1,14 @@
-import { createClient } from "@/lib/supabase/server"
 import Image from "next/image";
 import NextSession from "./NextSession";
 import WeatherAtTrack from "./WeatherAtTrack";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import GuestRateDriversButton from "./GuestRateDriversButton";
-
+import { getNextRace } from "@/lib/supabase/queries/races";
+import { getUser } from "@/lib/supabase/queries/auth"
 export default async function NextRaceWeekend() {
-    const supabase = await createClient();
-
-
-    const { data: { user } } = await supabase.auth.getUser()
-
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-
-    const { data: raceData, error: raceDataError } = await supabase
-        .from("races")
-        .select("*")
-        .eq("is_cancelled", false)
-        .gt("date_end", twoDaysAgo.toISOString())
-        .order("date_start", { ascending: true })
-        .limit(1)
-        .single();
-
+    const { data: { user } } = await getUser()
+    const { data: raceData, error: raceDataError } = await getNextRace();
 
     if (raceDataError) {
         console.error("Error fetching race data:", raceDataError);

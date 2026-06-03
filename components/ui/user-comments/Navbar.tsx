@@ -42,6 +42,6 @@ export default function Navbar({ user }: NavbarProps) {
 
 function Seperator() {
     return (
-        <div className="h-[50%] w-[2px] bg-card-border" />
+        <div className="h-[50%] w-0.5 bg-card-border" />
     )
 }

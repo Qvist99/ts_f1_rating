@@ -1,26 +1,18 @@
 import { DriverWithCommentsAndStats } from "@/lib/types"
 import Image from "next/image"
-import { createClient } from "@/lib/supabase/server"
-
+import { getRaceSummary } from "@/lib/supabase/queries/races";
 
 export default async function DriverCard({ driver }: { driver: DriverWithCommentsAndStats }) {
-    const supabase = await createClient();
-
     const driverStats = driver.driver_stats;
 
     const bestAverageRaceId = driverStats.best_round_race_id as string;
 
-    const { data: race, error: raceError } = await supabase
-        .from("races")
-        .select("race_name, round, date_end")
-        .eq("id", bestAverageRaceId)
-        .single();
+    const { data: race, error: raceError } = await getRaceSummary(bestAverageRaceId);
 
 
     if (raceError) {
         console.error(`Error fetching race data for driver ${driver.first_name} ${driver.last_name}:`, raceError);
     }
-
 
     const currYear = new Date().getFullYear();
 

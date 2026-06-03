@@ -37,8 +37,6 @@ export default function Hero({ currYear, drivers, races, driverStandings, constr
             id="hero"
             className="grid grid-cols-2 gap-16 min-h-screen items-center pt-25 pb-15 relative overflow-hidden -mx-10 px-10"
         >
-            {/* Red glow */}
-            <div className="pointer-events-none absolute top-[-20%] right-[-10%] w-175 h-175 rounded-full bg-[radial-gradient(circle,rgba(232,0,45,0.07)_0%,transparent_65%)]" />
 
             {/* Left – copy */}
             <div className="relative z-10">

@@ -1,16 +1,15 @@
 import { RatingStoreProvider } from "@/components/providers/RatingsProvider"
 import Header from "@/components/ui/rate/Header"
 import DriverGrid from "@/components/ui/rate/DriverGrid"
-import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-
-
+import { getRaceWithRatings } from "@/lib/supabase/queries/races"
+import { getDriversWithRatingsForRace } from "@/lib/supabase/queries/drivers"
+import { getUser } from "@/lib/supabase/queries/auth"
 
 export default async function page({ params }: { params: Promise<{ raceId: string }> }) {
-    const supabase = await createClient()
     const { raceId } = await params
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await getUser();
 
     if (!user) {
         // handle unauthenticated user, maybe redirect to login page or show an error message
@@ -18,18 +17,8 @@ export default async function page({ params }: { params: Promise<{ raceId: strin
     }
 
     const [{ data: raceData, error: raceError }, { data: driversData, error: driversError }] = await Promise.all([
-        supabase
-            .from("races")
-            .select(`*, race_ratings!left(*)`)
-            .eq("id", raceId)
-            .eq("race_ratings.user_id", user.id)
-            .single(),
-        supabase
-            .from("race_drivers")
-            .select(`drivers(*, driver_ratings!left(*))`)
-            .eq("race_id", raceId)
-            .eq("drivers.driver_ratings.race_id", raceId)
-            .eq("drivers.driver_ratings.user_id", user.id)
+        getRaceWithRatings(raceId, user.id),
+        getDriversWithRatingsForRace(raceId, user.id)
     ])
 
     if (raceError || driversError) {

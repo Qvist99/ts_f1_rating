@@ -1,15 +1,14 @@
 import AccountNavbar from "@/components/ui/account/AccountNavbar"
-import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import ProfileInformationSection from "@/components/ui/account/ProfileInformationSection"
 import AccountSettingsSection from "@/components/ui/account/AccountSettingsSection"
 import SignOutSection from "@/components/ui/account/SingOutSection"
 import DangerZoneSection from "@/components/ui/account/DangerZoneSection"
+import { getUser } from "@/lib/supabase/queries/auth"
+import { getProfileByUserId } from "@/lib/supabase/queries/profiles"
 
 export default async function Page() {
-    const supabase = await createClient();
-
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await getUser();
 
     //This should never happend as the route is protected by auth middleware
     if (!user) {
@@ -17,14 +16,12 @@ export default async function Page() {
         redirect("/dashboard");
     }
 
-    const { data: profileData, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+    const { data: profileData, error } = await getProfileByUserId(user.id);
 
     if (error) {
         console.error("Failed to fetch user profile:", error);
         redirect("/dashboard");
     }
-
-
 
     return (
         <div className="flex flex-col gap-12">
