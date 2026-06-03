@@ -14,13 +14,14 @@ export default async function DriverCard({ driver }: { driver: DriverWithComment
         console.error(`Error fetching race data for driver ${driver.first_name} ${driver.last_name}:`, raceError);
     }
 
+
     const currYear = new Date().getFullYear();
 
     return (
         <div className="py-2 px-4">
             <div className="flex gap-2 items-center">
                 <div className="rounded-full overflow-hidden border-2 border-[#aaabac55] " /* style={{ borderColor: `#${driver.team_color}` }} */>
-                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} />
+                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} priority />
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-lg text-text-primary font-bold font-condensed">{driver.first_name} {driver.last_name}</h2>

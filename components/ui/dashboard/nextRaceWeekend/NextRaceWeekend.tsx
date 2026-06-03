@@ -31,7 +31,13 @@ export default async function NextRaceWeekend() {
                 <div className="flex gap-4 items-center justify-center">
                     {/* Find svgs for the countries and map them instead as the images from the api are suboptimal */}
                     <div className="w-10 h-10 rounded-full overflow-hidden relative">
-                        <Image src={raceData.country_flag_url} alt={raceData.country_name} fill className="object-cover" />
+                        <Image
+                            src={raceData.country_flag_url}
+                            alt={raceData.country_name}
+                            fill
+                            sizes="120px"
+                            className="object-cover"
+                        />
                     </div>
 
                     <div>
@@ -43,7 +49,14 @@ export default async function NextRaceWeekend() {
                 </div>
 
                 <div>
-                    <Image src={raceData.circuit_image_url} alt={raceData.circuit_name} width={70} height={0} style={{ height: "auto" }} />
+                    <Image
+                        src={raceData.circuit_image_url}
+                        alt={raceData.circuit_name}
+                        width={70}
+                        height={0}
+                        style={{ height: "auto" }}
+                    />
+
                 </div>
 
             </div>
