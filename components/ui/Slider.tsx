@@ -34,7 +34,7 @@ export default function Slider({ pages, autoRotateMs, action }: {
                 </div>
 
                 {action && (
-                    <div className="absolute right-0 bottom-[-6px]">
+                    <div className="absolute right-0 -bottom-1.5">
                         {"node" in action
                             ? action.node
                             : "href" in action

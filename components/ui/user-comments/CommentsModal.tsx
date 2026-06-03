@@ -2,8 +2,8 @@
 // If we end up having modal in multiple places we will change this to some sort of modal content component using the global modal at that point
 import { useState } from "react";
 import { Comment, DriverWithStats } from "@/lib/types"
-import { createClient } from "@/lib/supabase/client";
 import { X, ArrowUp, ArrowDown, Pencil } from "lucide-react";
+import { insertDriverComment, updateDriverComment, deleteDriverComment } from "@/lib/supabase/actions/driverComments"
 
 interface CommentsModalProps {
     driver: DriverWithStats;
@@ -26,8 +26,6 @@ export default function CommentsModal({ driver, myPositive, myNegative, onClose,
     const [newNeg, setNewNeg] = useState("");
     const [toast, setToast] = useState<{ msg: string; type: "pos" | "neg" | "info" } | null>(null)
 
-    const supabase = createClient();
-
     // Same as with the modal the toast might be moved to some sor of global component
     function showToast(msg: string, type: "pos" | "neg" | "info") {
         setToast({ msg, type })
@@ -41,17 +39,11 @@ export default function CommentsModal({ driver, myPositive, myNegative, onClose,
 
         if (!text) return
 
-        const { data, error } = await supabase.from("driver_comments").insert({
-            driver_id: driver.id,
-            type,
-            text
-        })
-            .select()
-            .single()
+        const { data, error } = await insertDriverComment(driver.id, type, text).catch(() => ({ data: null, error: "User not authenticated." }));
 
         if (error || !data) {
             console.error("Error posting comment:", error);
-            showToast("Failt to post comment.", "neg");
+            showToast("Failed to post comment.", "neg");
             return
         }
 
@@ -66,7 +58,7 @@ export default function CommentsModal({ driver, myPositive, myNegative, onClose,
 
     async function handleSave(comment: Comment) {
         if (!editText.trim()) { showToast("Comment cannot be empty.", "neg"); return }
-        const { error } = await supabase.from("driver_comments").update({ text: editText.trim(), updated_at: new Date().toISOString() }).eq("id", comment.id)
+        const { error } = await updateDriverComment(comment.id, { text: editText.trim() }).catch(() => ({ error: "User not authenticated." }));
         if (error) {
             console.error("Error updating comment:", error);
             showToast("Failed to update comment.", "neg");
@@ -87,7 +79,7 @@ export default function CommentsModal({ driver, myPositive, myNegative, onClose,
 
 
     async function handleDelete(comment: Comment) {
-        const { error } = await supabase.from("driver_comments").delete().eq("id", comment.id)
+        const { error } = await deleteDriverComment(comment.id).catch(() => ({ error: "User not authenticated." }));
         if (error) {
             console.error("Error deleting comment:", error);
             showToast("Failed to delete comment.", "neg");

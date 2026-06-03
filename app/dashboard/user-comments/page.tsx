@@ -1,17 +1,19 @@
 import Navbar from "@/components/ui/user-comments/Navbar"
 import DriversList from "@/components/ui/user-comments/DriversList"
-import { createClient } from "@/lib/supabase/server"
 import { UserProfile } from "@/lib/types"
-export default async function page() {
-    const supabase = await createClient();
-    const currentYear = new Date().getFullYear()
+import { getDriversBySeason, getDriverStats } from "@/lib/supabase/queries/drivers"
+import { getUser } from "@/lib/supabase/queries/auth"
+import { getProfileByUserId } from "@/lib/supabase/queries/profiles"
 
-    const { data: { user } } = await supabase.auth.getUser()
+export default async function page() {
+    const { data: { user } } = await getUser();
+
+    const currentYear = new Date().getFullYear()
 
     let profile: UserProfile | null = null
 
     if (user) {
-        const { data: profileData, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+        const { data: profileData, error } = await getProfileByUserId(user.id);
 
         if (error) {
             console.error("Error fetching profile:", error);
@@ -29,19 +31,14 @@ export default async function page() {
         }
     }
 
-    const { data: drivers, error: driversError } = await supabase
-        .from("drivers")
-        .select("*")
-        .eq("year", currentYear)
+    const { data: drivers, error: driversError } = await getDriversBySeason(currentYear);
 
     if (driversError) {
         console.error(driversError);
         return <div>Error loading drivers</div>;
     }
 
-    const { data: driverStats, error: driverStatsError } = await supabase
-        .from("driver_stats")
-        .select("*")
+    const { data: driverStats, error: driverStatsError } = await getDriverStats();
 
 
     // Better empty state in the future

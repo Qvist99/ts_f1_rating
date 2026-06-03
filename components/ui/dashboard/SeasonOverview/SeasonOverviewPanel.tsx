@@ -1,50 +1,28 @@
-import { createClient } from "@/lib/supabase/server"
 import Tabs from "../../Tabs";
 import DriverStandings from "./DriverStandings";
 import ConstructorStandings from "./ConstructorStandings";
 import DriverRatings from "./DriverRatings";
 import RaceRatings from "./RaceRatings";
-
+import { getLastFiveRaces, getRaceRatingStats } from "@/lib/supabase/queries/races";
+import { getDriversBySeason, getDriverStats } from "@/lib/supabase/queries/drivers"
+import { getDriverStandingsBySeason, getConstructorStandingsBySeason } from "@/lib/supabase/queries/standings"
+import { connection } from "next/server";
 export default async function SeasonOverviewPanel() {
-    const supabase = await createClient();
-
+    await connection();
     const currentYear = new Date().getFullYear()
-    const currentDate = new Date().toISOString()
+
+    const lastFiveRacesPromise = getLastFiveRaces();
+
+    const driversPromise = getDriversBySeason(currentYear);
+
+    const driversStatsPromise = getDriverStats();
+
+    const raceRatingStatsPromise = getRaceRatingStats();
 
 
-    const lastFiveRacesPromise = supabase
-        .from("races")
-        .select("id")
-        .lte("date_end", currentDate)
-        .eq("is_cancelled", false)
-        .order("date_end", { ascending: false })
-        .limit(5)
+    const driverStandingsPromise = getDriverStandingsBySeason(currentYear);
 
-    const driversPromise = supabase
-        .from("drivers")
-        .select("*")
-        .eq("year", currentYear);
-
-    const driversStatsPromise = supabase
-        .from("driver_stats")
-        .select("*")
-
-    const raceRatingStatsPromise = supabase
-        .from("race_rating_stats")
-        .select("*");
-
-
-    const driverStandingsPromise = supabase
-        .from("driver_standings")
-        .select("standings")
-        .eq("year", currentYear)
-        .maybeSingle();
-
-    const constructorStandingsPromise = supabase
-        .from("constructor_standings")
-        .select("standings")
-        .eq("year", currentYear)
-        .maybeSingle();
+    const constructorStandingsPromise = getConstructorStandingsBySeason(currentYear);
 
     return (
         <div className="h-full overflow-hidden">

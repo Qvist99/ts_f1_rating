@@ -1,20 +1,13 @@
 import { DriverWithCommentsAndStats } from "@/lib/types"
 import Image from "next/image"
-import { createClient } from "@/lib/supabase/server"
-
+import { getRaceSummary } from "@/lib/supabase/queries/races";
 
 export default async function DriverCard({ driver }: { driver: DriverWithCommentsAndStats }) {
-    const supabase = await createClient();
-
     const driverStats = driver.driver_stats;
 
     const bestAverageRaceId = driverStats.best_round_race_id as string;
 
-    const { data: race, error: raceError } = await supabase
-        .from("races")
-        .select("race_name, round, date_end")
-        .eq("id", bestAverageRaceId)
-        .single();
+    const { data: race, error: raceError } = await getRaceSummary(bestAverageRaceId);
 
 
     if (raceError) {
@@ -28,7 +21,7 @@ export default async function DriverCard({ driver }: { driver: DriverWithComment
         <div className="py-2 px-4">
             <div className="flex gap-2 items-center">
                 <div className="rounded-full overflow-hidden border-2 border-[#aaabac55] " /* style={{ borderColor: `#${driver.team_color}` }} */>
-                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} />
+                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} priority />
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-lg text-text-primary font-bold font-condensed">{driver.first_name} {driver.last_name}</h2>

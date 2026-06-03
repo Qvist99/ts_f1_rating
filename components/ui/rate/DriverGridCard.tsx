@@ -1,20 +1,14 @@
 "use client"
 import { DriverWithRatings, RaceWithRatings } from "@/lib/types"
 import { RatingButtons } from "./RatingButtons"
-import { createClient } from "@/lib/supabase/client"
 import { useRating } from "@/lib/hooks/useRating"
+import { upsertDriverRating } from "@/lib/supabase/actions/driverRatings"
 
 export default function DriverGridCard({ driver, race, }: { driver: DriverWithRatings, race: RaceWithRatings, }) {
-    const supabase = createClient()
 
     const { localRating, borderState, handleRate } = useRating({
         initialRating: driver.driver_ratings?.[0]?.rating,
-        onSave: async (val) => await supabase
-            .from('driver_ratings')
-            .upsert(
-                { driver_id: driver.id, race_id: race.id, meeting_key: race.meeting_key, rating: val },
-                { onConflict: 'driver_id, race_id, user_id' }
-            ),
+        onSave: async (val) => await upsertDriverRating(driver.id, race.id, race.meeting_key, val),
         type: "driver"
     })
 

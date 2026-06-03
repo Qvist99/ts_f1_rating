@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { createClient } from "@/lib/supabase/server"
 import Navbar from '@/components/ui/landingPage/Navbar'
 import Hero from '@/components/ui/landingPage/Hero'
 import MarqueeStrip from '@/components/ui/landingPage/MarqueeStrip'
@@ -8,9 +7,13 @@ import FanOpinion from '@/components/ui/landingPage/FanOpinion'
 import Schedule from '@/components/ui/landingPage/Schedule'
 import CallToAction from '@/components/ui/landingPage/CallToAction'
 import Footer from '@/components/ui/landingPage/Footer'
-async function LandingPage() {
+import { getRacesBySeason } from "@/lib/supabase/queries/races"
+import { getDriversBySeason } from "@/lib/supabase/queries/drivers"
+import { getDriverStandingsBySeason, getConstructorStandingsBySeason } from "@/lib/supabase/queries/standings"
+import { connection } from "next/server";
 
-  const supabase = await createClient();
+async function LandingPage() {
+  await connection();
   const currYear = new Date().getFullYear()
 
   const startOfYear = new Date(currYear, 0, 1).toISOString()
@@ -23,28 +26,11 @@ async function LandingPage() {
     { data: driverStandings },
     { data: constructorStandings },
   ] = await Promise.all([
-    supabase
-      .from("drivers")
-      .select("*")
-      .eq("year", currYear),
-    supabase
-      .from("races")
-      .select("*")
-      .gte("date_start", startOfYear)
-      .lte("date_start", endOfYear)
-      .neq("is_cancelled", true)
-      .order("date_start", { ascending: true }),
-    supabase
-      .from("driver_standings")
-      .select("standings")
-      .eq("year", currYear)
-      .maybeSingle(),
-    supabase
-      .from("constructor_standings")
-      .select("standings")
-      .eq("year", currYear)
-      .maybeSingle(),
-  ])
+    getDriversBySeason(currYear),
+    getRacesBySeason(startOfYear, endOfYear),
+    getDriverStandingsBySeason(currYear),
+    getConstructorStandingsBySeason(currYear),
+  ]);
 
 
   return (

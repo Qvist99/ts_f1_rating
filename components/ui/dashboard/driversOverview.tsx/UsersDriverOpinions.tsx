@@ -1,16 +1,15 @@
-import { createClient } from "@/lib/supabase/server"
-import Slider from "../Slider";
-import DriverCard from "../DriverCard";
-import FanCommentsCard from "../FanCommentsCard";
+import Slider from "@/components/ui/Slider";
+import DriverCard from "./DriverCard";
+import FanCommentsCard from "./FanCommentsCard";
+
+import { getDriversWithComments, getDriversByIds } from "@/lib/supabase/queries/drivers"
+import { connection } from "next/server";
 export default async function UsersDriverOpinions() {
-    const supabase = await createClient();
+    await connection();
     const currentYear = new Date().getFullYear()
 
-    const { data: drivers, error: driversError } = await supabase
-        .from("drivers")
-        .select("*, driver_comments(*)")
-        .eq("year", currentYear)
-        .limit(15, { referencedTable: "driver_comments" })
+    const { data: drivers, error: driversError } = await getDriversWithComments(currentYear, 15);
+
 
     if (driversError) {
         console.error("Error fetching drivers:", driversError);
@@ -21,10 +20,7 @@ export default async function UsersDriverOpinions() {
 
     const randomDriverIds = fiveRandomDrivers.map(driver => driver.id);
 
-    const { data: driverStats, error: driverStatsError } = await supabase
-        .from("driver_stats")
-        .select("*")
-        .in("driver_id", randomDriverIds)
+    const { data: driverStats, error: driverStatsError } = await getDriversByIds(randomDriverIds);
 
     if (driverStatsError) {
         console.error("Error fetching driver stats:", driverStatsError);

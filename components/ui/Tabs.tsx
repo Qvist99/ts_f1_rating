@@ -34,7 +34,7 @@ export default function Tabs({ tabs, defaultTab, paddingBottom = true }: TabsPro
                 ))}
             </div>
 
-            <div className={`h-full overflow-scroll px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${paddingBottom ? "pb-16" : ""}`}>
+            <div className={`h-full overflow-scroll px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none ${paddingBottom ? "pb-16" : ""}`}>
                 {tabs.find((tab) => tab.id === activeTab)?.content}
             </div>
 
