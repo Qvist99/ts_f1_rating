@@ -1,18 +1,17 @@
 import Link from 'next/link'
 import { Flag } from "lucide-react"
-import { createClient } from "@/lib/supabase/server"
 import AuthWidget from "@/components/ui/AuthWidget"
 import { UserProfile } from "@/lib/types"
+import { getUser } from "@/lib/supabase/queries/auth"
+import { getProfileByUserId } from "@/lib/supabase/queries/profiles"
 
 export async function DashboardNavbar() {
-
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await getUser();
 
     let profile: UserProfile | null = null
 
     if (user) {
-        const { data: profileData, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+        const { data: profileData, error } = await getProfileByUserId(user.id);
 
         if (error) {
             console.error("Error fetching profile:", error);

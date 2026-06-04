@@ -88,22 +88,6 @@ export type RaceWithRatings = Races & {
     race_ratings: RaceRatings[];
 };
 
-export type DriversWithRatingsPromise = PromiseLike<
-    PostgrestSingleResponse<DriverWithRatings[]>
->;
-
-export type DriverWithRatingsPromise = PromiseLike<
-    PostgrestSingleResponse<DriverWithRatings>
->;
-
-export type RacesWithRatingsPromise = PromiseLike<
-    PostgrestSingleResponse<RaceWithRatings[]>
->;
-
-export type RaceWithRatingsPromise = PromiseLike<
-    PostgrestSingleResponse<RaceWithRatings>
->;
-
 export type DriverStandingsPromise = PromiseLike<
     PostgrestSingleResponse<
         {
@@ -143,5 +127,3 @@ export type DriversStatsPromise = PromiseLike<
 export type RaceRatingStatsPromise = PromiseLike<
     PostgrestSingleResponse<RaceRatingStats[]>
 >;
-
-export type RacesPromise = PromiseLike<PostgrestSingleResponse<Races[]>>;

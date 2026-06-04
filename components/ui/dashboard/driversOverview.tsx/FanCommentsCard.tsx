@@ -1,4 +1,4 @@
-import Slider from "./Slider"
+import Slider from "@/components/ui/Slider"
 import { DriverWithCommentsAndStats } from "@/lib/types"
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { shuffleArray } from "@/lib/utils";
