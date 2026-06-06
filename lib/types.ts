@@ -43,15 +43,13 @@ export type RaceSession = {
 };
 
 export type WeatherDataFromApi = {
-    date: string;
-    session_key: number;
-    track_temperature: number; // Track temperature (°C).
-    rainfall: 0 | 1; // Whether there is rainfall.
-    wind_direction: number; // Wind direction (°), from 0° to 359°.
-    wind_speed: number; // Wind speed (m/s).
+    timestamp: string;
+    trackTemp: number; // Track temperature (°C).
+    rainfall: boolean; // Whether there is rainfall.
+    windDirection: number; // Wind direction (°), from 0° to 359°.
+    windSpeed: number; // Wind speed (m/s).
     humidity: number; // Relative humidity in percentage
-    air_temperature: number; // Air temperature (°C)
-    meeting_key: number;
+    airTemp: number; // Air temperature (°C)
     pressure: number; // Air pressure (mbar).
 };
 
