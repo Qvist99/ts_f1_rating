@@ -65,7 +65,7 @@ export default async function NextRaceWeekend() {
                 {/* Next session component - track weather box and Rate drivers button */}
                 <NextSession sessions={raceData.sessions} />
                 <div className="flex w-[30%]  rounded">
-                    <WeatherAtTrack sessions={raceData.sessions} meetingKey={raceData.meeting_key} />
+                    <WeatherAtTrack sessions={raceData.sessions} />
                 </div>
 
             </div>
