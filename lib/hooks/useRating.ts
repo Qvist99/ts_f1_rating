@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRatingStore } from "@/components/providers/RatingsProvider";
-type BorderState = "idle" | "updating" | "saving" | "saved" | "error";
+type OutlineState = "idle" | "updating" | "saving" | "saved" | "error";
 
 export function useRating({ initialRating, onSave, type }: {
     initialRating?: number;
@@ -22,7 +22,7 @@ export function useRating({ initialRating, onSave, type }: {
     const [localRating, setLocalRating] = useState<number | undefined>(
         initialRating,
     );
-    const [borderState, setBorderState] = useState<BorderState>("idle");
+    const [outlineState, setOutlineState] = useState<OutlineState>("idle");
     const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
         undefined,
     );
@@ -31,7 +31,7 @@ export function useRating({ initialRating, onSave, type }: {
 
     const handleRate = (val: number) => {
         setLocalRating(val);
-        setBorderState("updating");
+        setOutlineState("updating");
 
         if (!hasPendingRef.current) {
             incrementPendingCount();
@@ -40,19 +40,19 @@ export function useRating({ initialRating, onSave, type }: {
 
         clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(async () => {
-            setBorderState("saving");
+            setOutlineState("saving");
 
             try {
                 const { error } = await onSave(val);
                 if (error) throw error;
-                setBorderState("saved");
+                setOutlineState("saved");
                 if (type === "driver" && !hasRatingRef.current) {
                     incrementRatedDriverCount();
                     hasRatingRef.current = true;
                 }
-                setTimeout(() => setBorderState("idle"), 1800);
+                setTimeout(() => setOutlineState("idle"), 1800);
             } catch {
-                setBorderState("error");
+                setOutlineState("error");
                 setLocalRating(initialRating);
             } finally {
                 decrementPendingCount();
@@ -63,5 +63,5 @@ export function useRating({ initialRating, onSave, type }: {
 
     useEffect(() => () => clearTimeout(debounceRef.current), []);
 
-    return { localRating, borderState, handleRate };
+    return { localRating, outlineState, handleRate };
 }

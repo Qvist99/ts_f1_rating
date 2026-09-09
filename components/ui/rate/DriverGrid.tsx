@@ -18,7 +18,7 @@ export default function DriverGrid({ drivers, race }: { drivers: DriverWithRatin
         <div className="flex flex-col h-screen ">
             <DriverGridHeader />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 overflow-y-auto flex-1 pr-2 pb-50
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 overflow-y-auto flex-1 p-2 pb-50
         [&::-webkit-scrollbar]:w-1
         [&::-webkit-scrollbar-track]:bg-transparent
         [&::-webkit-scrollbar-thumb]:bg-card-border

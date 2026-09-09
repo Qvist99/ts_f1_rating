@@ -6,24 +6,24 @@ import { upsertDriverRating } from "@/lib/supabase/actions/driverRatings"
 
 export default function DriverGridCard({ driver, race, }: { driver: DriverWithRatings, race: RaceWithRatings, }) {
 
-    const { localRating, borderState, handleRate } = useRating({
+    const { localRating, outlineState, handleRate } = useRating({
         initialRating: driver.driver_ratings?.[0]?.rating,
         onSave: async (val) => await upsertDriverRating(driver.id, race.id, race.meeting_key, val),
         type: "driver"
     })
 
 
-    const borderClass = {
-        idle: localRating ? 'border-l-2 border-l-[#e10600] border border-card-border' : 'border border-card-border',
-        updating: 'border border-amber-500/40 bg-amber-500/5',
-        saving: 'border border-amber-500/40 bg-amber-500/5',
-        saved: 'border border-green-500/30 bg-green-500/5',
-        error: 'border border-red-500/40 bg-red-500/5',
-    }[borderState]
+    const outlineClass = {
+        idle: localRating ? 'border-l-2 border-l-green-500 outline outline-card-border' : 'outline outline-card-border',
+        updating: 'outline outline-amber-500/40 bg-amber-500/5',
+        saving: 'outline outline-amber-500/40 bg-amber-500/5',
+        saved: 'outline outline-green-500/30 bg-green-500/5',
+        error: 'outline outline-red-500/40 bg-red-500/5',
+    }[outlineState]
 
 
     return (
-        <div className={`rounded-lg p-5 flex flex-col gap-4 bg-card-bg transition-colors duration-200 ${borderClass}`}>
+        <div className={`p-5 flex flex-col gap-4 bg-card-bg transition-colors duration-200 ${outlineClass}`}>
 
             {/* Driver info */}
             <div className="flex justify-between items-start">
