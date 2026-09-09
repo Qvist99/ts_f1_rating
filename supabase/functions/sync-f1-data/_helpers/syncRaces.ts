@@ -60,6 +60,7 @@ export default async function syncRaces(
     );
 
   const racesToUpsert = [];
+  let currRound = 1;
 
   for (const [index, race] of racesRaw.entries()) {
     await throttle();
@@ -68,7 +69,7 @@ export default async function syncRaces(
 
     racesToUpsert.push({
       meeting_key: race.meeting_key,
-      round: index + 1,
+      round: race.is_cancelled ? -1 : currRound++,
       circuit_name: race.circuit_short_name,
       circuit_image_url: race.circuit_image,
       country_flag_url: race.country_flag,
