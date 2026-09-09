@@ -1,11 +1,8 @@
 import { Suspense } from 'react'
 import Navbar from '@/components/ui/landingPage/Navbar'
 import Hero from '@/components/ui/landingPage/Hero'
-import MarqueeStrip from '@/components/ui/landingPage/MarqueeStrip'
-import HowItWorks from '@/components/ui/landingPage/HowItWorks'
 import FanOpinion from '@/components/ui/landingPage/FanOpinion'
 import Schedule from '@/components/ui/landingPage/Schedule'
-import CallToAction from '@/components/ui/landingPage/CallToAction'
 import Footer from '@/components/ui/landingPage/Footer'
 import { getRacesBySeason } from "@/lib/supabase/queries/races"
 import { getDriversBySeason } from "@/lib/supabase/queries/drivers"
@@ -39,11 +36,8 @@ async function LandingPage() {
     >
       <Navbar />
       <Hero currYear={currYear} drivers={drivers} races={races} driverStandings={driverStandings} constructorStandings={constructorStandings} />
-      <MarqueeStrip drivers={drivers} />
-      <HowItWorks />
-      <FanOpinion races={races} />
       <Schedule races={races} />
-      <CallToAction />
+      <FanOpinion races={races} />
       <Footer currYear={currYear} />
     </main>
   )

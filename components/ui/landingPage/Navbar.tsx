@@ -3,9 +3,8 @@ import Link from 'next/link'
 
 export default function Navbar() {
     const sections = [
-        { name: 'Features', href: '#how-it-works' },
-        { name: 'Rate Drivers', href: '#fan-opinion' },
         { name: 'Schedule', href: '#schedule' },
+        { name: 'Rate Drivers', href: '#fan-opinion' },
     ]
 
     return (

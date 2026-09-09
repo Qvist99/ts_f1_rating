@@ -62,7 +62,7 @@ export default function Hero({ currYear, drivers, races, driverStandings, constr
                         Open App
                     </Link>
                     <Link
-                        href="#how-it-works"
+                        href="#fan-opinion"
                         className="inline-flex items-center gap-2 text-[#888] font-condensed font-semibold text-base tracking-[0.06em] uppercase py-3.5 px-5 rounded-[3px] border border-white/15 hover:border-white/35 hover:text-[#f0f0f0] transition-all"
                     >
                         How It Works
