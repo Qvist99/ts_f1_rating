@@ -115,9 +115,6 @@ export default function CommentsModal({ driver, myPositive, myNegative, onClose,
                             <div className="font-condensed text-xl font-extrabold uppercase leading-none">{driver.first_name} {driver.last_name}</div>
                             <div className="text-xs" style={{ color: `#${driver.team_color}` }}>{driver.team_name} · #{driver.driver_number}</div>
                         </div>
-                        <span className="font-condensed text-xs tracking-widest uppercase text-[#e8410a] bg-[#271613] border border-[#572011] px-2 py-0.75 rounded-[3px] ml-1">
-                            Your Comments
-                        </span>
                     </div>
                     <button
                         onClick={handleClose}
