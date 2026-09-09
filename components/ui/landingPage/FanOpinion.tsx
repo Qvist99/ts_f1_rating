@@ -50,7 +50,7 @@ export default function FanOpinion({ races }: FanOpinionProps) {
             <div className="bg-[#111113] border border-card-border rounded-[6px] overflow-hidden">
                 <div className="flex items-center justify-between px-4.5 py-3.5 border-b border-card-border">
                     <div className="font-condensed font-bold text-[0.85rem] uppercase tracking-[0.08em] text-[#888]">
-                        Max Verstappen · Red Bull #1
+                        Max Verstappen · Red Bull #3
                     </div>
                     <div className="font-condensed text-[0.7rem] text-[#555] tracking-[0.06em]">{latestRace ? `${latestRace.race_name} · R${latestRace.round}` : 'Canadian GP · R7'}</div>
                 </div>
