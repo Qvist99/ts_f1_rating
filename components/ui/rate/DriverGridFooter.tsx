@@ -10,7 +10,7 @@ export default function DriverGridFooter({ race }: {
     race: RaceWithRatings
 
 }) {
-    const { localRating, borderState, handleRate } = useRating({
+    const { localRating, outlineState, handleRate } = useRating({
         initialRating: race.race_ratings?.[0]?.rating,
         onSave: async (val) => await upsertRaceRating(race.id, race.meeting_key, val),
         type: "race"
@@ -23,7 +23,7 @@ export default function DriverGridFooter({ race }: {
         saving: 'border-t border-amber-600 bg-[#1a1608]',
         saved: 'border-t border-green-700 bg-[#0f1a10]',
         error: 'border-t border-red-800 bg-[#1a0f0f]',
-    }[borderState]
+    }[outlineState]
 
 
     return (
