@@ -14,11 +14,11 @@ export default function DriverGridCard({ driver, race, }: { driver: DriverWithRa
 
 
     const outlineClass = {
-        idle: localRating ? 'border-l-2 border-l-green-500 outline outline-card-border' : 'outline outline-card-border',
-        updating: 'outline outline-amber-500/40 bg-amber-500/5',
-        saving: 'outline outline-amber-500/40 bg-amber-500/5',
-        saved: 'outline outline-green-500/30 bg-green-500/5',
-        error: 'outline outline-red-500/40 bg-red-500/5',
+        idle: localRating ? 'border-l-2 border-l-green-500 outline outline-card-border' : 'border-l-2 border-l-transparent outline outline-card-border',
+        updating: 'border-l-2 border-l-transparent outline outline-amber-500/40 bg-amber-500/5',
+        saving: 'border-l-2 border-l-transparent outline outline-amber-500/40 bg-amber-500/5',
+        saved: 'border-l-2 border-l-transparent outline outline-green-500/30 bg-green-500/5',
+        error: 'border-l-2 border-l-transparent outline outline-red-500/40 bg-red-500/5',
     }[outlineState]
 
 
