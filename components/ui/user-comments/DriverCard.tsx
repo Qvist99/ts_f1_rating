@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client";
 import CommentsModal from "./CommentsModal"
 import Image from "next/image";
@@ -41,6 +41,7 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
     const [comments, setComments] = useState<Comment[]>([]);
     const [myComments, setMyComments] = useState<Comment[]>([]);
     const [fetched, setFetched] = useState(false);
+    const fetchingRef = useRef(false);
 
     const supabase = createClient();
 
@@ -68,55 +69,42 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
 
 
 
-    useEffect(() => {
-        if (!isExpanded || fetched) return;
+    const fetchComments = useCallback(async () => {
+        if (fetchingRef.current || fetched) return;
+        fetchingRef.current = true;
+        setLoading(true);
 
-        async function fetchComments() {
-            setLoading(true);
 
-            const commentsQuery = user
-                ? supabase
-                    .from("driver_comments")
-                    .select("*")
-                    .eq("driver_id", driver.id)
-                    .neq("user_id", user.id)
-                : supabase
-                    .from("driver_comments")
-                    .select("*")
-                    .eq("driver_id", driver.id);
+        const { data, error } = await supabase
+            .from("driver_comments")
+            .select("*")
+            .eq("driver_id", driver.id);
 
-            const myCommentsQuery = user
-                ? supabase
-                    .from("driver_comments")
-                    .select("*")
-                    .eq("driver_id", driver.id)
-                    .eq("user_id", user.id)
-                : Promise.resolve({ data: [], error: null });
-
-            const [
-                { data: commentsData, error: commentsError },
-                { data: myCommentsData, error: myCommentsError }
-            ] = await Promise.all([
-                commentsQuery,
-                myCommentsQuery
-            ]);
-
-            if (commentsError || myCommentsError) {
-                console.error("Error fetching comments:", commentsError || myCommentsError);
-                setLoading(false);
-                return;
-            }
-
-            setComments(commentsData);
-            setMyComments(myCommentsData);
+        if (error) {
+            console.error("Error fetching comments:", error);
             setLoading(false);
-            setFetched(true);
+            fetchingRef.current = false;
+            return;
         }
 
-        fetchComments();
+        const myCommentsData = data.filter(c => c.user_id === user?.id);
+        const commentsData = data.filter(c => c.user_id !== user?.id);
 
-    }, [isExpanded])
+        setComments(commentsData);
+        setMyComments(myCommentsData);
+        setFetched(true);
+        setLoading(false);
+        fetchingRef.current = false;
 
+    }, [driver.id, user, fetched, supabase])
+
+
+    //fallback: We still fetch in expand if hover never fired.
+    useEffect(() => {
+        if (isExpanded && !fetched) {
+            fetchComments();
+        }
+    }, [isExpanded, fetched, fetchComments]);
 
     const handleOpenModal = () => {
         if (!user) {
@@ -130,7 +118,7 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
 
     return (
         <div className="flex flex-col border-b border-border ">
-            <div className="flex py-2.5 justify-between w-full items-center cursor-pointer h-21.25" onClick={onToggle}>
+            <div className="flex py-2.5 justify-between w-full items-center cursor-pointer h-21.25" onClick={onToggle} onMouseEnter={fetchComments} onFocus={fetchComments}>
                 <div className="flex items-center gap-4">
                     <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
 
