@@ -77,7 +77,7 @@ export default function Hero({ currYear, drivers, races, driverStandings, constr
                     </div>
                     <div>
                         <div className="font-condensed font-extrabold text-[2rem] leading-none mb-1">
-                            {leadingDriverInStandings?.points_current || 131}<span className="text-base text-[#555] font-light ml-0.5"> pts</span>
+                            {leadingDriverInStandings?.points_current || 131}<span className="text-[1rem] text-[#555] font-light ml-0.5"> pts</span>
                         </div>
                         <div className="text-[0.73rem] text-[#555] uppercase tracking-[0.08em]">Driver Points Lead</div>
                     </div>
