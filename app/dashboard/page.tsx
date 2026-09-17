@@ -1,9 +1,10 @@
 import Card from '@/components/ui/Card'
-import UsersDriverOpinions from '@/components/ui/dashboard/driversOverview.tsx/UsersDriverOpinions'
+import UserDriverOpinionsServer from './_components/UserDriverOpinionsServer'
 import SeasonOverviewPanel from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanel'
 import { DashboardNavbar } from '@/components/ui/dashboard/DashboardNavbar'
 import { Suspense } from "react"
 import AuthWidgetSkeleton from "@/components/ui/authWidget/AuthWidgetSkeleton"
+import UsersDriverOpinionsSkeleton from '@/components/ui/dashboard/driversOverview/UsersDriverOpinionsSkeleton'
 import { AuthWidgetServer } from './_components/AuthWidgetServer'
 import NextRaceWeekendServer from './_components/NextRaceWeekendServer'
 import NextRaceWeekendSkeleton from '@/components/ui/dashboard/nextRaceWeekend/NextRaceWeekendSkeleton'
@@ -27,8 +28,8 @@ export default async function Dashboard() {
           </Card>
 
           <Card className="flex-3" hasBorder={false} applyPadding={false}>
-            <Suspense>
-              <UsersDriverOpinions />
+            <Suspense fallback={<UsersDriverOpinionsSkeleton />}>
+              <UserDriverOpinionsServer />
             </Suspense>
           </Card>
         </div>
