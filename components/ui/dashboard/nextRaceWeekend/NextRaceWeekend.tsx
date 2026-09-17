@@ -4,16 +4,15 @@ import WeatherAtTrack from "./WeatherAtTrack";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import GuestRateDriversButton from "./GuestRateDriversButton";
-import { getNextRace } from "@/lib/supabase/queries/races";
-import { getUser } from "@/lib/supabase/queries/auth"
-export default async function NextRaceWeekend() {
-    const { data: { user } } = await getUser()
-    const { data: raceData, error: raceDataError } = await getNextRace();
+import { Races } from "@/lib/types"
+import type { User } from "@supabase/supabase-js"
 
-    if (raceDataError) {
-        console.error("Error fetching race data:", raceDataError);
-        return null;
-    }
+interface NextRaceWeekendProps {
+    user: User | null;
+    raceData: Races;
+}
+
+export default async function NextRaceWeekend({ user, raceData }: NextRaceWeekendProps) {
 
     const sessions = raceData.sessions || [];
 
@@ -44,8 +43,6 @@ export default async function NextRaceWeekend() {
                         <h2 className="text-xl text-text-primary font-bold leading-none mb-0 font-condensed">{raceData.race_name}</h2>
                         <p className="text-sm text-text-muted font-bold">{raceData.circuit_name} - Round {raceData.round}</p>
                     </div>
-
-
                 </div>
 
                 <div>
@@ -53,10 +50,9 @@ export default async function NextRaceWeekend() {
                         src={raceData.circuit_image_url}
                         alt={raceData.circuit_name}
                         width={70}
-                        height={0}
+                        height={52.5}
                         style={{ height: "auto" }}
                     />
-
                 </div>
 
             </div>
