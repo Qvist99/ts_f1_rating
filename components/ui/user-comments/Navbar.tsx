@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import AuthWidget from "@/components/ui/AuthWidget";
+import AuthWidget from "@/components/ui/authWidget/AuthWidget";
 import { UserProfile } from "@/lib/types";
 
 

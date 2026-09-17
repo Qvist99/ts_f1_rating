@@ -1,32 +1,12 @@
 import Link from 'next/link'
 import { Flag } from "lucide-react"
-import AuthWidget from "@/components/ui/AuthWidget"
-import { UserProfile } from "@/lib/types"
-import { getUser } from "@/lib/supabase/queries/auth"
-import { getProfileByUserId } from "@/lib/supabase/queries/profiles"
 
-export async function DashboardNavbar() {
-    const { data: { user } } = await getUser();
+interface DashboardNavbarProps {
+    children: React.ReactNode;
+}
 
-    let profile: UserProfile | null = null
 
-    if (user) {
-        const { data: profileData, error } = await getProfileByUserId(user.id);
-
-        if (error) {
-            console.error("Error fetching profile:", error);
-            // fallback to a default profile as profileData should always exist if the user is authenticated
-            profile = {
-                id: user.id,
-                display_name: user.email || "Unknown User",
-                email: user.email || null,
-                deletion_requested_at: null,
-                updated_at: new Date().toISOString(),
-            }
-        } else {
-            profile = profileData
-        }
-    }
+export async function DashboardNavbar({ children }: DashboardNavbarProps) {
 
     return (
         <div className="flex flex-row items-center h-19 justify-between">
@@ -45,7 +25,7 @@ export async function DashboardNavbar() {
                     <Flag className="w-4 h-4" />
                     Drivers Overview
                 </Link>
-                <AuthWidget user={profile} />
+                {children}
             </div>
         </div>
 

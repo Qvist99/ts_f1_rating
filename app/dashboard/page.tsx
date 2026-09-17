@@ -4,14 +4,18 @@ import UsersDriverOpinions from '@/components/ui/dashboard/driversOverview.tsx/U
 import SeasonOverviewPanel from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanel'
 import { DashboardNavbar } from '@/components/ui/dashboard/DashboardNavbar'
 import { Suspense } from "react"
+import AuthWidgetSkeleton from "@/components/ui/authWidget/AuthWidgetSkeleton"
+import { AuthWidgetServer } from './_components/AuthWidgetServer'
 
 export default async function Dashboard() {
   // We need to overlook how we handle heights here. Probably will be a headache to maintain.
   return (
     <div>
-      <Suspense fallback={<div className="h-19 w-full " />}>
-        <DashboardNavbar />
-      </Suspense>
+      <DashboardNavbar >
+        <Suspense fallback={<AuthWidgetSkeleton />}>
+          <AuthWidgetServer />
+        </Suspense>
+      </DashboardNavbar>
       <div className="flex flex-row justify-between gap-10 max-h-[calc(100vh-126px)]">
 
         <div className='leftSide w-[60%] flex flex-col gap-2 '>
