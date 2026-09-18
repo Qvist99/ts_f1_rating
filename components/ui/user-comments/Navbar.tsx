@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import AuthWidget from "@/components/ui/authWidget/AuthWidget";
-import { UserProfile } from "@/lib/types";
-
+import { connection } from "next/server";
 
 interface NavbarProps {
-    user: UserProfile | null
+    children: React.ReactNode
 }
 
-export default function Navbar({ user }: NavbarProps) {
+export default async function Navbar({ children }: NavbarProps) {
+    await connection();
     const currentYear = new Date().getFullYear()
 
     return (
@@ -29,7 +28,7 @@ export default function Navbar({ user }: NavbarProps) {
                     </span>
                 </div>
                 <div>
-                    <AuthWidget user={user} redirectTo="/dashboard/user-comments" />
+                    {children}
                 </div>
             </div>
         </div>

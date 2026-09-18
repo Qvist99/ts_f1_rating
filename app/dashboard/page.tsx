@@ -6,7 +6,7 @@ import { Suspense } from "react"
 import AuthWidgetSkeleton from "@/components/ui/authWidget/AuthWidgetSkeleton"
 import { SeasonOverviewPanelSkeleton } from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanelSkeleton'
 import UsersDriverOpinionsSkeleton from '@/components/ui/dashboard/driversOverview/UsersDriverOpinionsSkeleton'
-import { AuthWidgetServer } from './_components/AuthWidgetServer'
+import AuthWidgetServer from "@/components/server/AuthWidgetServer"
 import NextRaceWeekendServer from './_components/NextRaceWeekendServer'
 import NextRaceWeekendSkeleton from '@/components/ui/dashboard/nextRaceWeekend/NextRaceWeekendSkeleton'
 

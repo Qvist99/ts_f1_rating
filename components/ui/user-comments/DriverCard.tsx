@@ -7,6 +7,7 @@ import { ArrowUp, ArrowDown, Star, ChevronDown, ChevronUp, Plus } from "lucide-r
 import { Comment, DriverWithStats } from "@/lib/types";
 import { useLoginModal } from "@/lib/stores/useLoginModal";
 import { UserProfile } from "@/lib/types";
+import CommentColumnsSkeleton from "./CommentColumnsSkeleton"
 
 
 interface DriverCardProps {
@@ -73,7 +74,6 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
         if (fetchingRef.current || fetched) return;
         fetchingRef.current = true;
         setLoading(true);
-
 
         const { data, error } = await supabase
             .from("driver_comments")
@@ -174,8 +174,8 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
                                 <p className="text-text-muted text-xs">COMMENTS</p>
                             </div>
                         </div>
-                        {/* Current solution during loading, remove when replaced with proper loading state */}
-                        <button className="flex gap-1 items-center border border-[#4e4c4c] rounded py-1.5 px-3 cursor-pointer hover:text-[#e8410a] hover:border-[#e8410a] transition-colors loading:cursor-not-allowed loading:text-[#7a7870] loading:border-[#7a7870] disabled:cursor-not-allowed disabled:text-[#7a7870] disabled:border-[#7a7870]"
+
+                        <button className="flex gap-1 items-center border border-[#4e4c4c] rounded py-1.5 px-3 cursor-pointer hover:text-[#e8410a] hover:border-[#e8410a] transition-colors disabled:cursor-not-allowed disabled:text-[#7a7870] disabled:border-[#7a7870]"
                             onClick={() => handleOpenModal()}
                             disabled={loading}
                         >
@@ -188,7 +188,7 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
 
 
                     {loading ? (
-                        <div className="p-6 text-sm text-[#3a3835] italic">Loading comments...</div>
+                        <CommentColumnsSkeleton />
                     ) : (
                         <div className="grid grid-cols-2" style={{ minHeight: 260 }}>
                             <CommentColumn
@@ -215,8 +215,6 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
             }}
 
             />}
-
-
 
         </div>
     )
