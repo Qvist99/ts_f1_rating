@@ -4,7 +4,17 @@ import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { shuffleArray } from "@/lib/utils";
 
 
-export default function FanCommentsCard({ driver }: { driver: DriverWithCommentsAndStats }) {
+interface FanCommentsCardProps {
+    driver: DriverWithCommentsAndStats & {
+        best_race: {
+            race_name: string;
+            round: number;
+            date_end: string;
+        } | null;
+    };
+}
+
+export default function FanCommentsCard({ driver }: FanCommentsCardProps) {
     const commentsPerSlide = 3;
 
     const positiveComments = driver.driver_comments.filter(comment => comment.type === "positive");

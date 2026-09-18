@@ -1,20 +1,18 @@
 import { DriverWithCommentsAndStats } from "@/lib/types"
 import Image from "next/image"
-import { getRaceSummary } from "@/lib/supabase/queries/races";
 
-export default async function DriverCard({ driver }: { driver: DriverWithCommentsAndStats }) {
+interface DriverCardProps {
+    driver: DriverWithCommentsAndStats & {
+        best_race: {
+            race_name: string;
+            round: number;
+            date_end: string;
+        } | null;
+    };
+}
+
+export default function DriverCard({ driver }: DriverCardProps) {
     const driverStats = driver.driver_stats;
-
-    const bestAverageRaceId = driverStats.best_round_race_id as string;
-
-    const { data: race, error: raceError } = await getRaceSummary(bestAverageRaceId);
-
-
-    if (raceError) {
-        console.error(`Error fetching race data for driver ${driver.first_name} ${driver.last_name}:`, raceError);
-    }
-
-
     const currYear = new Date().getFullYear();
 
     return (
@@ -47,10 +45,10 @@ export default async function DriverCard({ driver }: { driver: DriverWithComment
             <div className="mt-2">
                 {driverStats.avg_rating_best_round && (
                     <BestRace
-                        raceName={race?.race_name || ""}
+                        raceName={driver.best_race?.race_name || ""}
                         rating={driverStats.avg_rating_best_round}
-                        round={race?.round || 0}
-                        date={race?.date_end || ""}
+                        round={driver.best_race?.round || 0}
+                        date={driver.best_race?.date_end || ""}
                     />
                 )}
             </div>

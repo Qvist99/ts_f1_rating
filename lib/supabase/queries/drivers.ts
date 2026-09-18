@@ -29,7 +29,7 @@ export async function getDriverStats() {
         .select("*");
 }
 
-export async function getDriversByIds(driverIds: string[]) {
+export async function getDriversWithStatsByIds(driverIds: string[]) {
     const supabase = await createClient();
 
     return supabase

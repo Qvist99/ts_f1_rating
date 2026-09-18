@@ -17,8 +17,8 @@ export default function FilterPills<T extends string>({ filters, active, onChang
                     key={filter.value}
                     onClick={() => onChange(filter.value)}
                     className={`text-sm px-3 py-1 rounded-full border transition-colors cursor-pointer ${active === filter.value
-                            ? "border-[#e10600] bg-[#e10600]/15 text-[#e10600]"
-                            : "border-border text-text-muted hover:text-white"
+                        ? "border-[#e10600] bg-[#e10600]/15 text-[#e10600]"
+                        : "border-border text-text-muted hover:text-white"
                         }`}
                 >
                     {filter.label}
