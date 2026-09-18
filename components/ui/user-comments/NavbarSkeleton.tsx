@@ -1,15 +1,9 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import { connection } from "next/server";
+import { Skeleton } from "@/components/ui/skeleton";
+import AuthWidgetSkeleton from "../authWidget/AuthWidgetSkeleton";
 
-interface NavbarProps {
-    children: React.ReactNode
-}
-
-export default async function Navbar({ children }: NavbarProps) {
-    await connection();
-    const currentYear = new Date().getFullYear()
-
+export default function NavbarSkeleton() {
     return (
         <div className="flex items-center justify-between h-14 bg-card-bg -mx-36 px-36 border-b-2 border-card-border gap-4">
             <div className="flex items-center gap-2 h-full">
@@ -22,21 +16,12 @@ export default async function Navbar({ children }: NavbarProps) {
             </div>
 
             <div className="flex gap-4 items-center">
-                <div className="flex items-center px-3 py-1 text-[#7a7870] bg-[#202028] rounded font-condensed text-sm h-fit">
-                    <span>
-                        {currentYear} SEASON
-                    </span>
-                </div>
-                <div>
-                    {children}
-                </div>
+                <Skeleton className="h-6 w-24 rounded" /> {/* year pill */}
+                <AuthWidgetSkeleton />
             </div>
         </div>
     )
 }
-
-
-
 
 
 function Seperator() {

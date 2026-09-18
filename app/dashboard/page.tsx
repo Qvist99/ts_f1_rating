@@ -1,32 +1,44 @@
-import SuspenseCard from '@/components/ui/SuspenseCard'
-import NextRaceWeekend from '@/components/ui/dashboard/nextRaceWeekend/NextRaceWeekend'
-import UsersDriverOpinions from '@/components/ui/dashboard/driversOverview.tsx/UsersDriverOpinions'
+import Card from '@/components/ui/Card'
+import UserDriverOpinionsServer from './_components/UserDriverOpinionsServer'
 import SeasonOverviewPanel from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanel'
 import { DashboardNavbar } from '@/components/ui/dashboard/DashboardNavbar'
 import { Suspense } from "react"
+import AuthWidgetSkeleton from "@/components/ui/authWidget/AuthWidgetSkeleton"
+import { SeasonOverviewPanelSkeleton } from '@/components/ui/dashboard/SeasonOverview/SeasonOverviewPanelSkeleton'
+import UsersDriverOpinionsSkeleton from '@/components/ui/dashboard/driversOverview/UsersDriverOpinionsSkeleton'
+import AuthWidgetServer from "@/components/server/AuthWidgetServer"
+import NextRaceWeekendServer from './_components/NextRaceWeekendServer'
+import NextRaceWeekendSkeleton from '@/components/ui/dashboard/nextRaceWeekend/NextRaceWeekendSkeleton'
 
 export default async function Dashboard() {
-  // We need to overlook how we handle heights here. Probably will be a headache to maintain.
   return (
     <div>
-      <Suspense fallback={<div className="h-19 w-full " />}>
-        <DashboardNavbar />
-      </Suspense>
-      <div className="flex flex-row justify-between gap-10 max-h-[calc(100vh-126px)]">
+      <DashboardNavbar >
+        <Suspense fallback={<AuthWidgetSkeleton />}>
+          <AuthWidgetServer />
+        </Suspense>
+      </DashboardNavbar>
+      <div className="flex flex-row justify-between gap-10 h-[calc(100vh-126px)]">
 
         <div className='leftSide w-[60%] flex flex-col gap-2 '>
-          <SuspenseCard height={400}>
-            <NextRaceWeekend />
-          </SuspenseCard>
+          <Card className="flex-2">
+            <Suspense fallback={<NextRaceWeekendSkeleton />}>
+              <NextRaceWeekendServer />
+            </Suspense>
+          </Card>
 
-          <SuspenseCard height={370} hasBorder={false} applyPadding={false}>
-            <UsersDriverOpinions />
-          </SuspenseCard>
+          <Card className="flex-3" hasBorder={false} applyPadding={false}>
+            <Suspense fallback={<UsersDriverOpinionsSkeleton />}>
+              <UserDriverOpinionsServer />
+            </Suspense>
+          </Card>
         </div>
         <div className='rightSide w-[40%] flex flex-col gap-4'>
-          <SuspenseCard applyPadding={false} height={800}>
-            <SeasonOverviewPanel />
-          </SuspenseCard>
+          <Card className="flex-1" applyPadding={false} >
+            <Suspense fallback={<SeasonOverviewPanelSkeleton />}>
+              <SeasonOverviewPanel />
+            </Suspense>
+          </Card>
         </div>
       </div>
     </div>
