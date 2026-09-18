@@ -13,7 +13,7 @@ export default function AccountSettingsSection({ profile }: { profile: UserProfi
     const isDirty = value?.trim() !== profile.display_name?.trim()
 
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
         if (!isDirty) return
 
