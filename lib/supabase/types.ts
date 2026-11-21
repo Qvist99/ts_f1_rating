@@ -172,7 +172,7 @@ export type Database = {
           acronym: string
           driver_number: number
           first_name: string
-          headshot_url: string
+          headshot_url: string | null
           id: string
           last_name: string
           team_color: string
@@ -183,7 +183,7 @@ export type Database = {
           acronym: string
           driver_number: number
           first_name: string
-          headshot_url: string
+          headshot_url?: string | null
           id?: string
           last_name: string
           team_color: string
@@ -194,7 +194,7 @@ export type Database = {
           acronym?: string
           driver_number?: number
           first_name?: string
-          headshot_url?: string
+          headshot_url?: string | null
           id?: string
           last_name?: string
           team_color?: string

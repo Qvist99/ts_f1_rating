@@ -1,5 +1,5 @@
 import { DriverWithCommentsAndStats } from "@/lib/types"
-import Image from "next/image"
+import DriverHeadshotImage from "@/components/ui/DriverHeadshotImage"
 
 interface DriverCardProps {
     driver: DriverWithCommentsAndStats & {
@@ -18,8 +18,8 @@ export default function DriverCard({ driver }: DriverCardProps) {
     return (
         <div className="py-2 px-4">
             <div className="flex gap-2 items-center">
-                <div className="rounded-full overflow-hidden border-2 border-[#aaabac55] " /* style={{ borderColor: `#${driver.team_color}` }} */>
-                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} priority />
+                <div className="rounded-full overflow-hidden border-2 border-[#aaabac55] ">
+                    <DriverHeadshotImage headshotUrl={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={75} height={75} />
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-lg text-text-primary font-bold font-condensed">{driver.first_name} {driver.last_name}</h2>
