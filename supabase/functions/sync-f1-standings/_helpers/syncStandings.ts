@@ -23,33 +23,29 @@ export default async function syncStandings(
     return;
   }
 
-  // Find closest race weekend to now
-  const closestRace = races?.reduce((prev, curr) => {
-    const prevDiff = Math.abs(
-      new Date(prev.date_end).getTime() - now.getTime(),
-    );
-    const currDiff = Math.abs(
-      new Date(curr.date_end).getTime() - now.getTime(),
-    );
-    return currDiff < prevDiff ? curr : prev;
-  });
-
-  const pointScoringSessions = closestRace.sessions.filter(
-    (s: { session_type: string; date_end: string; is_cancelled: boolean }) =>
-      s.session_type === "Race" &&
-      !s.is_cancelled &&
-      new Date(s.date_end) < now,
+  // Find the most recently finished point scoring session
+  const completedPointSessions = (races ?? []).flatMap((race) =>
+    (race.sessions as any[])
+      .filter(
+        (s) =>
+          s.session_type === "Race" &&
+          !s.is_cancelled &&
+          new Date(s.date_end) < now,
+      )
+      .map((session) => ({ race, session }))
   );
 
-  if (!pointScoringSessions.length) {
+  if (!completedPointSessions.length) {
     console.log("No completed point-scoring sessions yet, skipping...");
     return;
   }
 
-  const latestPointSession = pointScoringSessions.sort(
-    (a: { date_end: string }, b: { date_end: string }) =>
-      new Date(b.date_end).getTime() - new Date(a.date_end).getTime(),
-  )[0];
+  const { race: latestRace, session: latestPointSession } =
+    completedPointSessions.reduce((latest, curr) =>
+      new Date(curr.session.date_end) > new Date(latest.session.date_end)
+        ? curr
+        : latest
+    );
 
   const latestSessionEnd = new Date(latestPointSession.date_end);
 
@@ -93,8 +89,14 @@ export default async function syncStandings(
       : "No standings found, creating...",
   );
 
-  const meetingKey = closestRace.meeting_key;
+  const meetingKey = latestRace.meeting_key;
   const sessionKey = latestPointSession.session_key;
+  console.log(
+    "Syncing standings for meeting:",
+    meetingKey,
+    "session:",
+    sessionKey,
+  );
 
   const [driverStandingsResponse, constructorStandingsResponse] = await Promise
     .all([
