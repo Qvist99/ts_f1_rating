@@ -1,16 +1,14 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-
+import { useEffect, useState } from "react";
 
 type CountdownResult = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  isFinished: boolean;
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    isFinished: boolean;
 };
-
 
 export function useCountdown(targetDate: string | undefined): CountdownResult {
     const calculateTimeLeft = () => {
@@ -34,7 +32,7 @@ export function useCountdown(targetDate: string | undefined): CountdownResult {
                 seconds: 0,
                 isFinished: true,
             };
-        }  
+        }
 
         return {
             days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -42,12 +40,14 @@ export function useCountdown(targetDate: string | undefined): CountdownResult {
             minutes: Math.floor((diff / (1000 * 60)) % 60),
             seconds: Math.floor((diff / 1000) % 60),
             isFinished: false,
-        }
-    }
+        };
+    };
 
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
     useEffect(() => {
+        setTimeLeft(calculateTimeLeft());
+
         const interval = setInterval(() => {
             setTimeLeft(calculateTimeLeft());
         }, 1000);
@@ -56,5 +56,4 @@ export function useCountdown(targetDate: string | undefined): CountdownResult {
     }, [targetDate]);
 
     return timeLeft;
-
 }

@@ -103,7 +103,7 @@ export default async function syncRaces(
     data.map((r) => [
       r.meeting_key,
       r.sessions.find((s: { session_type: string }) =>
-        s.session_type === "Race"
+        s.session_type === "Qualifying"
       )?.session_key,
     ]),
   );

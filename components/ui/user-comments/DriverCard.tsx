@@ -2,13 +2,12 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client";
 import CommentsModal from "./CommentsModal"
-import Image from "next/image";
 import { ArrowUp, ArrowDown, Star, ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Comment, DriverWithStats } from "@/lib/types";
 import { useLoginModal } from "@/lib/stores/useLoginModal";
 import { UserProfile } from "@/lib/types";
 import CommentColumnsSkeleton from "./CommentColumnsSkeleton"
-
+import DriverHeadshotImage from "@/components/ui/DriverHeadshotImage"
 
 interface DriverCardProps {
     driver: DriverWithStats;
@@ -120,7 +119,7 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
         <div className="flex flex-col border-b border-border ">
             <div className="flex py-2.5 justify-between w-full items-center cursor-pointer h-21.25" onClick={onToggle} onMouseEnter={fetchComments} onFocus={fetchComments}>
                 <div className="flex items-center gap-4">
-                    <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
+                    <DriverHeadshotImage headshotUrl={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
 
                     <div className="flex flex-col">
                         <p className="font-condensed text-xl mt-1">{driver.first_name} {driver.last_name}</p>
@@ -156,7 +155,8 @@ export default function DriverCard({ driver, isExpanded, onToggle, user }: Drive
                 <div className="border border-card-border rounded my-3">
                     <div className="topbar bg-card-bg p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <Image src={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
+                            <DriverHeadshotImage headshotUrl={driver.headshot_url} alt={`${driver.first_name} ${driver.last_name}`} width={50} height={50} className="rounded-full border-2 border-card-border" />
+
 
                             <div>
                                 <p className="font-condensed text-lg">{driver.first_name} {driver.last_name}</p>
