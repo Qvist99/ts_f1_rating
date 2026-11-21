@@ -1,0 +1,2 @@
+ALTER TABLE drivers
+ALTER COLUMN headshot_url DROP NOT NULL;
