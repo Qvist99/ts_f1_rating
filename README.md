@@ -22,9 +22,6 @@ averages, and best single-round rating per driver.
 
 ## Known improvements
 
-- **Testing** — no test coverage currently, planned but deprioritised given the
-  hobby project scope. Would add unit tests for Edge Function logic using Deno's
-  built-in test runner
 - **Styling** — CSS variables are inconsistently used and the Tailwind theme
   needs a proper pass to establish a consistent design system
 - **Mobile** — the app is currently not mobile compatible
